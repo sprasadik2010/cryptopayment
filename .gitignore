@@ -1,0 +1,32 @@
+# Node (Vite-React)
+client/node_modules/
+client/dist/
+client/.vite/
+
+# Environment files
+*.env
+*.env.*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Python (FastAPI)
+server/__pycache__/
+server/*.py[cod]
+server/.venvcrypto/
+server/venvcrypto/
+server/.mypy_cache/
+server/.pytest_cache/
+server/.ruff_cache/
+server/db
+
+# Python environment variables and logs
+server/.env
+server/*.log
+
+# VSCode settings (optional)
+.vscode/
+
+# Pyright cache
+server/.pyright/
