@@ -18,7 +18,7 @@ export default function DashBoard() {
 
     async function fetchUserDetails(token) {
         try {
-            const response = await fetch("http://192.168.1.100:8000/getamember", {
+            const response = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/getamember`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,

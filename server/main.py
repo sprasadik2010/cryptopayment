@@ -5,7 +5,7 @@ from fastapi import FastAPI, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from sqlalchemy import cast, String
 from database import SessionLocal, engine
-from models import Base, Member
+from models import Base, Member, ProfitClub
 from utils import generate_verification_token, verify_token
 from email_service import send_verification_email
 from pydantic import BaseModel, EmailStr
@@ -14,7 +14,21 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
+import socket
 
+def get_local_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # connect to a dummy IP to get your local IP
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
+local_ip = get_local_ip()
 # Initialize FastAPI app
 app = FastAPI()
 
@@ -22,9 +36,9 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://192.168.1.100:5173",  # <-- this one is for mobile access
+        f"http://localhost:5173",
+        f"http://127.0.0.1:5173",
+        f"http://{local_ip}:5173",  # <-- this one is for mobile access
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -80,6 +94,15 @@ class TokenResponse(BaseModel):
 
 class UserActivateRequest(BaseModel):
     is_active: bool
+
+class ProfitClubResponse(BaseModel):
+   id:int
+   releasedate:datetime
+   amount:float 
+
+class ProfitClubRequest(BaseModel):
+   releasedate:datetime
+   amount:float 
 
 # Dependency for database session
 def get_db():
@@ -447,6 +470,37 @@ def activatedeactivateuser(
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Update failed: {str(e)}")
+
+@app.post("/addprofitclub/")
+def addprofitclub(pc: ProfitClubRequest, db: Session = Depends(get_db)):
+    try:
+        new_profitclub = ProfitClub(
+            releasedate=pc.releasedate,
+            amount=pc.amount
+        )
+
+        db.add(new_profitclub)
+        db.commit()
+        db.refresh(new_profitclub)
+        return {"message": "ProfitClub  added"}
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Adding ProfitClub failed: {str(e)}")
+
+
+@app.get("/getallprofitclubs", response_model=List[ProfitClubResponse])
+def get_all_profitclubs(db: Session = Depends(get_db)):
+    ProfitClubs = db.query(ProfitClub).all()
+    return [
+        ProfitClubResponse(
+            id=pc.id,
+            releasedate=pc.releasedate,
+            amount=pc.amount
+        )
+        for pc in ProfitClubs
+    ]
+
 
 @app.post("/logout/")
 def logout():

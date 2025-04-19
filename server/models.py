@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, func
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, func, Numeric
 
 class Member(Base):
     __tablename__ = 'member'
@@ -19,3 +19,12 @@ class Member(Base):
     parentname = Column(String, nullable=True)    
     createdbyname = Column(String, nullable=True)   
     role = Column(String, nullable=False, server_default='user')
+
+class ProfitClub(Base):
+    __tablename__ = 'profitclub'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    releasedate = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    amount = Column(Numeric(19, 4), nullable=False)
+    
+

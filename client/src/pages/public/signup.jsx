@@ -68,7 +68,7 @@ export default function SignupPage() {
     setLoading(true);
 
     const response = await fetch(
-      `http://192.168.1.100:8000/${formData.position === "Right" ? "rightmost" : "leftmost"}/${parseInt(formData.parentid)}`
+      `${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/${formData.position === "Right" ? "rightmost" : "leftmost"}/${parseInt(formData.parentid)}`
     );
     const realparent = await response.json();
 
@@ -85,7 +85,7 @@ export default function SignupPage() {
     };
 
     try {
-      const response = await fetch("http://192.168.1.100:8000/register", {
+      const response = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),

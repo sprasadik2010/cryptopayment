@@ -35,6 +35,26 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
   const [selectedOrientation, setSelectedOrientation] = useState("vertical");
   const navigate = useNavigate();
 
+
+  const renderRectNode = ({ nodeDatum }) => (
+    <g onClick={() => handleNodeClick({ data: nodeDatum })}>
+      <rect
+        width="100"
+        height="40"
+        x="-50"
+        y="-20"
+        fill="lightblue"
+        stroke="steelblue"
+        strokeWidth="1.5"
+        rx={5}
+      />
+      <text fill="black" x="0" y="5" textAnchor="middle">
+        {nodeDatum.name}
+      </text>
+    </g>
+  );
+
+
   // Function to build hierarchical tree structure
   const buildTree = (flatData, rootId) => {
     console.log("Building tree for root ID:", rootId);
@@ -88,7 +108,7 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await fetch(`http://192.168.1.100:8000/children/${Currentusername}`, { method: "GET" });
+        const response = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/children/${Currentusername}`, { method: "GET" });
 
         if (!response.ok) throw new Error("Failed to fetch user details");
 
@@ -192,6 +212,7 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
             {treeData ? (
               <Tree
                 data={treeData}
+                renderCustomNodeElement={renderRectNode}
                 orientation={selectedOrientation}
                 translate={{ x: dimensions.width / 2, y: 100 }}
                 separation={{ siblings: 1.5, nonSiblings: 2 }}

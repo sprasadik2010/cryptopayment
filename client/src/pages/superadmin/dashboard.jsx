@@ -50,7 +50,7 @@ export default function DashBoard() {
 
     async function fetchUsers(token) {
         try {
-            const response = await fetch("http://127.0.0.1:8000/getallmembers", {
+            const response = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/getallmembers`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,

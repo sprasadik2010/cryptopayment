@@ -12,7 +12,7 @@ export default function Login() {
     setError(null);
 
     try {
-      const response = await fetch("http://192.168.1.100:8000/login/", {
+      const response = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

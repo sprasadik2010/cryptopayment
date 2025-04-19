@@ -11,11 +11,11 @@ export default function DownLines() {
             if (!currentUser) return;
 
             try {
-                const leftResponse = await fetch(`http://192.168.1.100:8000/left-descendants/${currentUser.id}`);
+                const leftResponse = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/left-descendants/${currentUser.id}`);
                 if (!leftResponse.ok) throw new Error("Failed to fetch left children");
                 setLeftChildren(await leftResponse.json());
 
-                const rightResponse = await fetch(`http://192.168.1.100:8000/right-descendants/${currentUser.id}`);
+                const rightResponse = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/right-descendants/${currentUser.id}`);
                 if (!rightResponse.ok) throw new Error("Failed to fetch right children");
                 setRightChildren(await rightResponse.json());
             } catch (error) {
