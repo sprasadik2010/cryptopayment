@@ -79,7 +79,7 @@ export default function BinaryPayouts() {
               <th className="py-2 px-1 border-b break-words">Left</th>
               <th className="py-2 px-1 border-b break-words">Right</th>
               <th className="py-2 px-1 border-b break-words">Pairs</th>
-              <th className="py-2 px-1 border-b break-words">Payout (₹)</th>
+              <th className="py-2 px-1 border-b break-words">Payout ($)</th>
             </tr>
           </thead>
           <tbody>
@@ -110,7 +110,7 @@ export default function BinaryPayouts() {
                     )}
                   </td>
                   <td className="py-2 px-1 border-b break-words">{row.pairs}</td>
-                  <td className="py-2 px-1 border-b break-words text-blue-600 font-semibold">₹{row.payout}</td>
+                  <td className="py-2 px-1 border-b break-words text-blue-600 font-semibold">${row.payout}</td>
                 </tr>
               ))
             )}

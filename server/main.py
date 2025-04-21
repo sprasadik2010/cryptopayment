@@ -278,6 +278,28 @@ def get_all_members(db: Session = Depends(get_db)):
     ]
 
 
+@app.get("/get-all-active-members", response_model=List[MemberResponse])
+def get_all_members(db: Session = Depends(get_db)):
+    members = db.query(Member).filter(Member.is_active, Member.role != 'superadmin').all()
+    return [
+        MemberResponse(
+            id=m.id,
+            name=m.membername,
+            email=m.email,
+            username=m.username,
+            parentid=m.parentid,
+            position=int(m.side),
+            is_verified=m.is_verified,
+            is_active=m.is_active,
+            createdby=m.createdby,
+            createdon=m.createdon,
+            parentname=m.parentname,
+            createdbyname=m.createdbyname,
+            role=m.role
+        )
+        for m in members
+    ]
+
 @app.get("/children/{username}", response_model=List[MemberResponse])
 def get_children(username: str, db: Session = Depends(get_db)):
     def fetch_all_children(parent_id):
@@ -312,6 +334,7 @@ def get_children(username: str, db: Session = Depends(get_db)):
             role=member.role
         ) for member in [parent] + children  # Adding parent to the beginning
     ]
+
 
 @app.get("/leftmost/{userid}", response_model=Optional[MemberResponse])
 def get_leftmost_vacant_left(userid: int, db: Session = Depends(get_db)):

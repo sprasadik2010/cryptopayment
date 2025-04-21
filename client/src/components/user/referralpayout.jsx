@@ -58,7 +58,7 @@ export default function ReferralPayouts() {
             <tr>
               <th className="py-2 px-1 border-b">Date</th>
               <th className="py-2 px-1 border-b">Referred Users</th>
-              <th className="py-2 px-1 border-b">Payout (₹)</th>
+              <th className="py-2 px-1 border-b">Payout ($)</th>
             </tr>
           </thead>
           <tbody>
@@ -73,7 +73,7 @@ export default function ReferralPayouts() {
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="py-2 px-1 border-b">{row.date}</td>
                   <td className="py-2 px-1 border-b">{row.count}</td>
-                  <td className="py-2 px-1 border-b text-green-600 font-semibold">₹{row.payout}</td>
+                  <td className="py-2 px-1 border-b text-green-600 font-semibold">${row.payout}</td>
                 </tr>
               ))
             )}
