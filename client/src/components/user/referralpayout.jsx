@@ -36,7 +36,7 @@ export default function ReferralPayouts() {
           return {
             date,
             count,
-            payout: payout.toFixed(2),
+            payout: payout.toFixed(3),
           };
         });
 

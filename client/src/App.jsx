@@ -7,6 +7,7 @@ import Verify from "./pages/public/verify";
 import DownLines from "./pages/user/downline";
 import PayOuts from "./pages/user/payouts";
 import AdminDashBoard from "./pages/superadmin/dashboard";
+import Homepage from "./pages/public/Homepage";
 
 // 🔐 Private Route Component
 function PrivateRoute({ children }) {
@@ -18,6 +19,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      {/* <Route path="/" element={<Homepage />} /> */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup/:encodedData?" element={<SignUp />} />
       <Route path="/verify/:encodedData?" element={<Verify/>} />

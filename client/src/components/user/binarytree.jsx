@@ -34,7 +34,12 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
   const [selectedPath, setSelectedPath] = useState("diagonal");
   const [selectedOrientation, setSelectedOrientation] = useState("vertical");
   const navigate = useNavigate();
-
+  const MAX_X = 200;
+  const MIN_X = -200;
+  const MAX_Y = 200;
+  const MIN_Y = -200;
+  const [translate, setTranslate] = useState({ x: 300, y: 200 });
+  const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
   const renderRectNode = ({ nodeDatum }) => (
     <g onClick={() => handleNodeClick({ data: nodeDatum })}>
@@ -161,6 +166,17 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
     [rootId, navigate, flatData]
   );
 
+  const handleOnUpdate = (currentTranslate) => {
+    const clamped = {
+      x: clamp(currentTranslate.x, MIN_X, MAX_X),
+      y: clamp(currentTranslate.y, MIN_Y, MAX_Y),
+    };
+  
+    if (!clamped.x < translate.x || !clamped.y < translate.y) {
+      setTranslate(clamped);
+    }
+  };
+
   return (
     <>
       <style>{styles}</style>
@@ -218,13 +234,14 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
                 separation={{ siblings: 1.5, nonSiblings: 2 }}
                 pathFunc={selectedPath}
                 onNodeClick={handleNodeClick}
+                onUpdate={handleOnUpdate}
                 rootNodeClassName="node__branch"
                 branchNodeClassName="node__branch"
                 leafNodeClassName="node__leaf"
                 nodeClassName={(nodeData) =>
                               nodeData.data.isPlaceholder ? "node__placeholder" : ""
                               }
-                draggable = {true}
+                draggable = {false}
                 
               />
             ) : (

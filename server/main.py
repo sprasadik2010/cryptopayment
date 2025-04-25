@@ -524,6 +524,221 @@ def get_all_profitclubs(db: Session = Depends(get_db)):
         for pc in ProfitClubs
     ]
 
+@app.get("/first-level-members/", response_model=List[MemberResponse])
+def first_level_members(db: Session = Depends(get_db)):
+    try:
+        # Get members who were created by someone (not superadmin, id > 1)
+        members = db.query(Member).filter(
+            Member.createdby > 1,
+            Member.username != 'superadmin'
+        ).all()
+
+        return [
+            MemberResponse(
+                id=m.id,
+                name=m.membername,
+                email=m.email,
+                username=m.username,
+                parentid=m.parentid,
+                position=int(m.side) if m.side is not None else 0,
+                is_verified=m.is_verified,
+                is_active=m.is_active,
+                createdby=m.createdby,
+                createdon=m.createdon,
+                parentname=m.parentname,
+                createdbyname=m.createdbyname,
+                role=m.role
+            )
+            for m in members
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/second-level-members/", response_model=List[MemberResponse])
+def get_second_level_members(db: Session = Depends(get_db)):
+    
+    
+    first_level_members = db.query(Member).filter(
+            Member.createdby > 1,
+            Member.username != 'superadmin'
+        ).all()
+    # first_level_members = db.query(Member).filter(Member.role != 'superadmin').all()
+
+    second_level_members = []
+
+    for member in first_level_members:
+        # For each first-level member, fetch their direct children (second-level)
+        second_level_members.extend(db.query(Member).filter(Member.createdby == member.id, Member.role != 'superadmin').all())
+
+    # Return the second-level members as MemberResponse
+    return [
+        MemberResponse(
+            id=m.id,
+            name=m.membername,
+            email=m.email,
+            username=m.username,
+            parentid=m.parentid,
+            position=int(m.side),
+            is_verified=m.is_verified,
+            is_active=m.is_active,
+            createdby=m.createdby,
+            createdon=m.createdon,
+            parentname=m.parentname,
+            createdbyname=m.createdbyname,
+            role=m.role
+        )
+        for m in second_level_members
+    ]
+
+
+@app.get("/third-level-members/", response_model=List[MemberResponse])
+def get_third_level_members(db: Session = Depends(get_db)):
+    # Fetch all second-level members (those who are children of first-level members)
+    first_level_members = db.query(Member).filter(
+        Member.createdby > 1,
+        Member.username != 'superadmin'
+    ).all()
+    # first_level_members = db.query(Member).filter(Member.role != 'superadmin').all()
+
+    second_level_members = []
+
+    for member in first_level_members:
+        # For each first-level member, fetch their direct children (second-level)
+        second_level_members.extend(db.query(Member).filter(Member.createdby == member.id, Member.role != 'superadmin').all())
+
+
+    third_level_members = []
+
+    for member in second_level_members:
+        # For each second-level member, fetch their direct children (third-level)
+        third_level_members.extend(db.query(Member).filter(Member.createdby == member.id, Member.role != 'superadmin').all())
+
+    # Return the third-level members as MemberResponse
+    return [
+        MemberResponse(
+            id=m.id,
+            name=m.membername,
+            email=m.email,
+            username=m.username,
+            parentid=m.parentid,
+            position=int(m.side),
+            is_verified=m.is_verified,
+            is_active=m.is_active,
+            createdby=m.createdby,
+            createdon=m.createdon,
+            parentname=m.parentname,
+            createdbyname=m.createdbyname,
+            role=m.role
+        )
+        for m in third_level_members
+    ]
+
+@app.get("/fourth-level-members/", response_model=List[MemberResponse])
+def get_fourth_level_members(db: Session = Depends(get_db)):
+    
+
+    first_level_members = db.query(Member).filter(
+        Member.createdby > 1,
+        Member.username != 'superadmin'
+    ).all()
+    # first_level_members = db.query(Member).filter(Member.role != 'superadmin').all()
+
+    second_level_members = []
+
+    for member in first_level_members:
+        # For each first-level member, fetch their direct children (second-level)
+        second_level_members.extend(db.query(Member).filter(Member.createdby == member.id, Member.role != 'superadmin').all())
+
+
+    third_level_members = []
+
+    for member in second_level_members:
+        # For each second-level member, fetch their direct children (third-level)
+        third_level_members.extend(db.query(Member).filter(Member.createdby == member.id, Member.role != 'superadmin').all())
+
+
+    fourth_level_members = []
+
+    for member in third_level_members:
+        # For each third-level member, fetch their direct children (fourth-level)
+        fourth_level_members.extend(db.query(Member).filter(Member.createdby == member.id, Member.role != 'superadmin').all())
+
+    # Return the fourth-level members as MemberResponse
+    return [
+        MemberResponse(
+            id=m.id,
+            name=m.membername,
+            email=m.email,
+            username=m.username,
+            parentid=m.parentid,
+            position=int(m.side),
+            is_verified=m.is_verified,
+            is_active=m.is_active,
+            createdby=m.createdby,
+            createdon=m.createdon,
+            parentname=m.parentname,
+            createdbyname=m.createdbyname,
+            role=m.role
+        )
+        for m in fourth_level_members
+    ]
+
+@app.get("/fifth-level-members/", response_model=List[MemberResponse])
+def get_fifth_level_members(db: Session = Depends(get_db)):
+    
+    first_level_members = db.query(Member).filter(
+    Member.createdby > 1,
+    Member.username != 'superadmin'
+    ).all()
+    # first_level_members = db.query(Member).filter(Member.role != 'superadmin').all()
+
+    second_level_members = []
+
+    for member in first_level_members:
+        # For each first-level member, fetch their direct children (second-level)
+        second_level_members.extend(db.query(Member).filter(Member.createdby == member.id, Member.role != 'superadmin').all())
+
+
+    third_level_members = []
+
+    for member in second_level_members:
+        # For each second-level member, fetch their direct children (third-level)
+        third_level_members.extend(db.query(Member).filter(Member.createdby == member.id, Member.role != 'superadmin').all())
+
+
+    fourth_level_members = []
+
+    for member in third_level_members:
+        # For each third-level member, fetch their direct children (fourth-level)
+        fourth_level_members.extend(db.query(Member).filter(Member.createdby == member.id, Member.role != 'superadmin').all())
+
+
+    fifth_level_members = []
+
+    for member in fourth_level_members:
+        # For each fourth-level member, fetch their direct children (fifth-level)
+        fifth_level_members.extend(db.query(Member).filter(Member.createdby == member.id, Member.role != 'superadmin').all())
+
+    # Return the fifth-level members as MemberResponse
+    return [
+        MemberResponse(
+            id=m.id,
+            name=m.membername,
+            email=m.email,
+            username=m.username,
+            parentid=m.parentid,
+            position=int(m.side),
+            is_verified=m.is_verified,
+            is_active=m.is_active,
+            createdby=m.createdby,
+            createdon=m.createdon,
+            parentname=m.parentname,
+            createdbyname=m.createdbyname,
+            role=m.role
+        )
+        for m in fifth_level_members
+    ]
+
 
 @app.post("/logout/")
 def logout():

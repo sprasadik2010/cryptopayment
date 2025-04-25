@@ -46,7 +46,7 @@ export default function BinaryPayouts() {
             leftCarry: carryLeft,
             rightCarry: carryRight,
             pairs,
-            payout: payout.toFixed(2),
+            payout: payout.toFixed(3),
           });
         });
 
