@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function ReferralPayouts() {
+export default function ReferralPayouts({onUpdate}) {
   const [referralData, setReferralData] = useState([]);
   const currentUser = JSON.parse(localStorage.getItem("currentuser"));
   const BASE_AMOUNT = 50;
@@ -41,6 +41,8 @@ export default function ReferralPayouts() {
         });
 
         setReferralData(results);
+        const totalPayout = +results.reduce((sum, r) => sum + parseFloat(r.payout), 0).toFixed(3);
+        onUpdate(totalPayout,"referral");
       } catch (err) {
         console.error("Error fetching referral data:", err);
       }

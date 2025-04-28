@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BinaryTree from "../../components/user/binarytree";
-import UserNavBar from "../../components/user/usernavbar";
+import BinaryTree from "../../components/user/home/binarytree";
+import UserNavBar from "../../components/user/common/usernavbar";
 
 export default function DashBoard() {
     const navigate = useNavigate();

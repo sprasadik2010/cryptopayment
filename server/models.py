@@ -27,4 +27,12 @@ class ProfitClub(Base):
     releasedate = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     amount = Column(Numeric(19, 4), nullable=False)
     
+class Withdrawals(Base):
+    __tablename__ = 'withdrawals'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    userid = Column(Integer)
+    date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    amount = Column(Numeric(19, 4), nullable=False)
+    
 

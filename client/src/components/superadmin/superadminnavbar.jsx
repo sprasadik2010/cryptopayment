@@ -1,7 +1,7 @@
 
 import SocialMediaLinks from "../public/socialmedialinks";
 import MobileMenu from "../public/mobilemenu";
-import LogoutButton from "../user/logoutbtton";
+import LogoutButton from "../user/common/logoutbtton";
 import SuperAdminMenu from "./superadminmenu";
 export default function SuperAdminNavBar(){
     return(

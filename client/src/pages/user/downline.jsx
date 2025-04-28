@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import UserNavBar from "../../components/user/usernavbar";
+import UserNavBar from "../../components/user/common/usernavbar";
 
 export default function DownLines() {
     const [leftchildren, setLeftChildren] = useState([]);

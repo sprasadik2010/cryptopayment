@@ -8,6 +8,7 @@ import DownLines from "./pages/user/downline";
 import PayOuts from "./pages/user/payouts";
 import AdminDashBoard from "./pages/superadmin/dashboard";
 import Homepage from "./pages/public/Homepage";
+import Withdrawals from "./pages/user/withdrawals";
 
 // 🔐 Private Route Component
 function PrivateRoute({ children }) {
@@ -44,6 +45,14 @@ function App() {
         element={
           <PrivateRoute>
             <PayOuts/>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/auth/withdrawals"
+        element={
+          <PrivateRoute>
+            <Withdrawals/>
           </PrivateRoute>
         }
       />

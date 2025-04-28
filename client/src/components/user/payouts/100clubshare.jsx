@@ -1,29 +1,47 @@
 import { useEffect, useState } from "react";
 
-export default function FirstLevelClubShare() {
+export default function HundredClubShare({onUpdate}) {
   const [profitData, setProfitData] = useState([]);
   const currentUser = JSON.parse(localStorage.getItem("currentuser"));
-  const sharepercentage = 10.00;
+  const sharePercentage = 5.00;
+
   useEffect(() => {
     const fetchProfitData = async () => {
       if (!currentUser) return;
 
       try {
-        const [profitRes, userCountRes] = await Promise.all([
-          fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/getallprofitclubs`),
-          fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/first-level-members`)
-        ]);
-
+        // Fetch all profit club data
+        const profitRes = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/getallprofitclubs`);
         const profitJson = await profitRes.json();
-        const allUsers = await userCountRes.json();
-        const activeCount = allUsers.filter(user => user.is_active).length;
+
+        // Fetch all users
+        const userRes = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/get-all-active-members`);
+        const allUsers = await userRes.json();
+
+        // Find users who referred at least 25 active users
+        const referralCounts = {};
+
+        allUsers.forEach(user => {
+          if (user.is_active && user.createdby) {
+            referralCounts[user.createdby] = (referralCounts[user.createdby] || 0) + 1;
+          }
+        });
+
+        const eligibleUsers = Object.entries(referralCounts)
+          .filter(([_, count]) => count >= 100)
+          .map(([userId]) => userId);
+
+        const isUserEligible = eligibleUsers.includes(currentUser.id.toString());
 
         const formatted = profitJson
           .sort((a, b) => new Date(a.releasedate) - new Date(b.releasedate))
           .map((entry) => {
             const date = new Date(entry.releasedate).toISOString().split("T")[0];
             const total = parseFloat(entry.amount);
-            const share = activeCount > 0 ? (total * sharepercentage / 100) / activeCount : 0;
+            const totalEligible = eligibleUsers.length;
+            const share = (isUserEligible && totalEligible > 0)
+              ? (total * sharePercentage / 100) / totalEligible
+              : 0;
 
             return {
               date,
@@ -32,8 +50,10 @@ export default function FirstLevelClubShare() {
           });
 
         setProfitData(formatted);
+        const totalPayout = +formatted.reduce((sum, r) => sum + parseFloat(r.userShare), 0).toFixed(3);
+        onUpdate(totalPayout,"hundredclub");
       } catch (err) {
-        console.error("Error fetching first level club data:", err);
+        console.error("Error fetching direct referral club data:", err);
       }
     };
 
@@ -42,7 +62,7 @@ export default function FirstLevelClubShare() {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">First Level Club Payouts</h2>
+      <h2 className="text-xl font-bold mb-4">100+ Direct Referral Club Payouts</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left border border-gray-300 table-fixed">
           <thead className="bg-gray-100">
@@ -55,7 +75,7 @@ export default function FirstLevelClubShare() {
             {profitData.length === 0 ? (
               <tr>
                 <td colSpan="2" className="text-center p-4 text-gray-500">
-                  No profit club data found.
+                  No eligible data found.
                 </td>
               </tr>
             ) : (

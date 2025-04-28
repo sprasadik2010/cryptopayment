@@ -5,7 +5,7 @@ from fastapi import FastAPI, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from sqlalchemy import cast, String
 from database import SessionLocal, engine
-from models import Base, Member, ProfitClub
+from models import Base, Member, ProfitClub, Withdrawals
 from utils import generate_verification_token, verify_token
 from email_service import send_verification_email
 from pydantic import BaseModel, EmailStr
@@ -103,6 +103,17 @@ class ProfitClubResponse(BaseModel):
 class ProfitClubRequest(BaseModel):
    releasedate:datetime
    amount:float 
+
+class WithdrawalResponse(BaseModel):
+   id:int
+   userid:int
+   date:datetime
+   amount:float 
+
+class WithdrawalRequest(BaseModel):
+   userid:int
+   amount:float 
+
 
 # Dependency for database session
 def get_db():
@@ -739,6 +750,53 @@ def get_fifth_level_members(db: Session = Depends(get_db)):
         for m in fifth_level_members
     ]
 
+
+
+@app.post("/addwithdrawal/")
+def addwithdrawal(wd: WithdrawalRequest, db: Session = Depends(get_db)):
+    try:
+        currentdate = datetime.today()
+        new_withdrawal = Withdrawals(
+            userid=wd.userid,
+            date=currentdate,
+            amount=wd.amount
+        )
+
+        db.add(new_withdrawal)
+        db.commit()
+        db.refresh(new_withdrawal)
+        return {"message": "Withdrawal added"}
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Adding Withdrawal failed: {str(e)}")
+
+
+@app.get("/getallwithdrawals", response_model=List[WithdrawalResponse])
+def get_all_withdrawals(db: Session = Depends(get_db)):
+    AllWithdrawals = db.query(Withdrawals).all()
+    return [
+        WithdrawalResponse(
+            id=wd.id,
+            userid=wd.userid,
+            date=wd.date,
+            amount=wd.amount
+        )
+        for wd in AllWithdrawals
+    ]
+
+@app.get("/getwithdrawals/{userid}", response_model=List[WithdrawalResponse])
+def get_withdrawals(userid: int, db: Session = Depends(get_db)):
+    user_withdrawals = db.query(Withdrawals).filter(Withdrawals.userid == userid).all()
+    return [
+        WithdrawalResponse(
+            id=wd.id,
+            userid=wd.userid,
+            date=wd.date,
+            amount=wd.amount
+        )
+        for wd in user_withdrawals
+    ]
 
 @app.post("/logout/")
 def logout():

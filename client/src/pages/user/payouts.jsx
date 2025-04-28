@@ -1,38 +1,67 @@
-import HundredClubShare from "../../components/user/100clubshare";
-import TwentyFiveClubShare from "../../components/user/25clubshare";
-import BinaryPayouts from "../../components/user/binarypayouts";
-import FifthLevelClubShare from "../../components/user/fifthlevelclubshare";
-import FirstLevelClubShare from "../../components/user/firstlevelclubshare";
-import FourthLevelClubShare from "../../components/user/fourthlevelclubshare";
-import PayOutFooter from "../../components/user/payoutfooter";
-import ProfitClubShare from "../../components/user/profitclubshare";
-import ReferralPayouts from "../../components/user/referralpayout";
-import SecondLevelClubShare from "../../components/user/secondlevelclubshare";
-import ThirdLevelClubShare from "../../components/user/thirdlevelclubshare";
-import UserNavBar from "../../components/user/usernavbar";
+import { useState } from "react";
+import HundredClubShare from "../../components/user/payouts/100clubshare";
+import TwentyFiveClubShare from "../../components/user/payouts/25clubshare";
+import BinaryPayouts from "../../components/user/payouts/binarypayouts";
+import FifthLevelClubShare from "../../components/user/payouts/fifthlevelclubshare";
+import FirstLevelClubShare from "../../components/user/payouts/firstlevelclubshare";
+import FourthLevelClubShare from "../../components/user/payouts/fourthlevelclubshare";
+import PayOutFooter from "../../components/user/payouts/payoutfooter";
+import ProfitClubShare from "../../components/user/payouts/profitclubshare";
+import ReferralPayouts from "../../components/user/payouts/referralpayout";
+import SecondLevelClubShare from "../../components/user/payouts/secondlevelclubshare";
+import ThirdLevelClubShare from "../../components/user/payouts/thirdlevelclubshare";
+import UserNavBar from "../../components/user/common/usernavbar";
+
+import useTotalPayout from "../../customhooks/useTotalPayout"
+import useWithdrawals from "../../customhooks/useWithdrawals";
 
 export default function PayOuts(){
+  
+  const currentUser = JSON.parse(localStorage.getItem("currentuser"));
+  const [payoutSum, setPayoutSum] = useState({
+    binary: 0,
+    referral: 0,
+    profitclub: 0,
+    firstlevelclub: 0,
+    secondlevelclub: 0,
+    thirdlevelclub: 0,
+    fourthlevelclub: 0,
+    fifthlevelclub: 0,
+    twentyfiveclub: 0,
+    hundredclub: 0
+  });
+  const onUpdate = (amount, source) => {
+    setPayoutSum(prev => ({
+      ...prev,
+      [source]: amount
+    }));
+  };
+  console.log(payoutSum);
+  const totalPayout = useTotalPayout();//Object.values(payoutSum).reduce((acc, val) => acc + val, 0);
+  const { withdrawals, totalWithdrawals } = useWithdrawals(currentUser?.id);
     return(
         <>
-        <header className="fixed top-0 left-0 w-full bg-white shadow z-50 p-4">
+        <header className="sticky top-0 left-0 w-full bg-white shadow z-50 p-4">
           <UserNavBar/>
         </header>
-        <main className="pt-20">
-          <BinaryPayouts/>
-          <ReferralPayouts/>        
+        <main>
+          <BinaryPayouts onUpdate={(val) => onUpdate(val, "binary")} />
+          <ReferralPayouts onUpdate={(val) => onUpdate(val, "referral")} />    
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-            <div className="bg-gray-200 p-4 rounded"><ProfitClubShare /></div>
-            <div className="bg-gray-200 p-4 rounded"><FirstLevelClubShare /></div>
-            <div className="bg-gray-200 p-4 rounded"><SecondLevelClubShare/></div>
-            <div className="bg-gray-200 p-4 rounded"><ThirdLevelClubShare/></div>
-            <div className="bg-gray-200 p-4 rounded"><FourthLevelClubShare/></div>
-            <div className="bg-gray-200 p-4 rounded"><FifthLevelClubShare/></div>
-            <div className="bg-gray-200 p-4 rounded"><TwentyFiveClubShare/></div>
-            <div className="bg-gray-200 p-4 rounded"><HundredClubShare/></div>
+            <div className="bg-gray-200 p-4 rounsded"><ProfitClubShare onUpdate={(val) => onUpdate(val, "profitclub")} /></div>
+            <div className="bg-gray-200 p-4 rounded"><FirstLevelClubShare onUpdate={(val) => onUpdate(val, "firstlevelclub")} /></div>
+            <div className="bg-gray-200 p-4 rounded"><SecondLevelClubShare onUpdate={(val) => onUpdate(val, "secondlevelclub")} /></div>
+            <div className="bg-gray-200 p-4 rounded"><ThirdLevelClubShare onUpdate={(val) => onUpdate(val, "thirdlevelclub")} /></div>
+            <div className="bg-gray-200 p-4 rounded"><FourthLevelClubShare onUpdate={(val) => onUpdate(val, "fourthlevelclub")} /></div>
+            <div className="bg-gray-200 p-4 rounded"><FifthLevelClubShare onUpdate={(val) => onUpdate(val, "fifthlevelclub")} /></div>
+            <div className="bg-gray-200 p-4 rounded"><TwentyFiveClubShare onUpdate={(val) => onUpdate(val, "twentyfiveclub")} /></div>
+            <div className="bg-gray-200 p-4 rounded"><HundredClubShare onUpdate={(val) => onUpdate(val, "hundredclub")} /></div>
           </div>
         </main>
-        <footer className="fixed bottom-0 left-0 w-full bg-gray-100 shadow-inner z-40 p-4 bg-blue-600">
-          <PayOutFooter />
+        <footer className="grid grid-cols-3 gap-4 sticky bottom-0 left-0 w-full bg-blue-400 shadow-inner z-40 p-4">
+        <div className="text-center">Total: <br/> {totalPayout}</div>
+        <div className="text-center">Withdrawal: <br/> {totalWithdrawals}</div>
+        <div className="text-center">Reamaing: <br/> {totalPayout - totalWithdrawals}</div>
         </footer>
 
         </>

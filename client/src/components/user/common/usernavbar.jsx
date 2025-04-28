@@ -1,6 +1,6 @@
 
 {/* Navbar */}
-import SocialMediaLinks from "../public/socialmedialinks";
+import SocialMediaLinks from "../../public/socialmedialinks";
 import UserMenu from "./usermenu";
 import LogoutButton from "./logoutbtton";
 import UserMobileMenu from "./usermobilemenu";

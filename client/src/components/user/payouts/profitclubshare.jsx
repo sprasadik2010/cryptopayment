@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 
-export default function FifthLevelClubShare() {
+export default function ProfitClubShare({onUpdate}) {
   const [profitData, setProfitData] = useState([]);
   const currentUser = JSON.parse(localStorage.getItem("currentuser"));
-  const sharepercentage = 1.00;
 
   useEffect(() => {
     const fetchProfitData = async () => {
@@ -12,7 +11,7 @@ export default function FifthLevelClubShare() {
       try {
         const [profitRes, userCountRes] = await Promise.all([
           fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/getallprofitclubs`),
-          fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/fifth-level-members`)
+          fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/get-all-active-members`)
         ]);
 
         const profitJson = await profitRes.json();
@@ -24,7 +23,7 @@ export default function FifthLevelClubShare() {
           .map((entry) => {
             const date = new Date(entry.releasedate).toISOString().split("T")[0];
             const total = parseFloat(entry.amount);
-            const share = activeCount > 0 ? (total * sharepercentage / 100) / activeCount : 0;
+            const share = activeCount > 0 ? (total * 0.10) / activeCount : 0;
 
             return {
               date,
@@ -33,8 +32,10 @@ export default function FifthLevelClubShare() {
           });
 
         setProfitData(formatted);
+        const totalPayout = +formatted.reduce((sum, r) => sum + parseFloat(r.userShare), 0).toFixed(3);
+        onUpdate(totalPayout,"profitclub");
       } catch (err) {
-        console.error("Error fetching fifth level club data:", err);
+        console.error("Error fetching profit club data:", err);
       }
     };
 
@@ -43,7 +44,7 @@ export default function FifthLevelClubShare() {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Fifth Level Club Payouts</h2>
+      <h2 className="text-xl font-bold mb-4">Profit Club Payouts</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left border border-gray-300 table-fixed">
           <thead className="bg-gray-100">

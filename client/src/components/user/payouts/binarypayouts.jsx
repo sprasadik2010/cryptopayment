@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-export default function BinaryPayouts() {
+export default function BinaryPayouts({onUpdate}) {
   const [payoutData, setPayoutData] = useState([]);
   const currentUser = JSON.parse(localStorage.getItem("currentuser"));
   const BASE_AMOUNT = 50;
@@ -51,6 +51,8 @@ export default function BinaryPayouts() {
         });
 
         setPayoutData(results);
+        const totalPayout = +results.reduce((sum, r) => sum + parseFloat(r.payout), 0).toFixed(3);
+        onUpdate(totalPayout,"binary");
       } catch (err) {
         console.error("Error fetching data:", err);
       }

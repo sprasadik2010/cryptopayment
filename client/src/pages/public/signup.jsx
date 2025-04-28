@@ -1,7 +1,7 @@
 import { Loader } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Loading from "../../components/loading";
+import Loading from "../../components/user/common/loading";
 import NavBar from "../../components/public/navbar";
 
 export default function SignupPage() {

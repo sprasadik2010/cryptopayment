@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 
-export default function ThirdLevelClubShare() {
+export default function FirstLevelClubShare({onUpdate}) {
   const [profitData, setProfitData] = useState([]);
   const currentUser = JSON.parse(localStorage.getItem("currentuser"));
-  const sharepercentage = 3.00;
-
+  const sharepercentage = 10.00;
   useEffect(() => {
     const fetchProfitData = async () => {
       if (!currentUser) return;
@@ -12,7 +11,7 @@ export default function ThirdLevelClubShare() {
       try {
         const [profitRes, userCountRes] = await Promise.all([
           fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/getallprofitclubs`),
-          fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/third-level-members`)
+          fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/first-level-members`)
         ]);
 
         const profitJson = await profitRes.json();
@@ -33,8 +32,10 @@ export default function ThirdLevelClubShare() {
           });
 
         setProfitData(formatted);
+        const totalPayout = +formatted.reduce((sum, r) => sum + parseFloat(r.userShare), 0).toFixed(3);
+        onUpdate(totalPayout,"firstlevelclub");
       } catch (err) {
-        console.error("Error fetching third level club data:", err);
+        console.error("Error fetching first level club data:", err);
       }
     };
 
@@ -43,7 +44,7 @@ export default function ThirdLevelClubShare() {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Third Level Club Payouts</h2>
+      <h2 className="text-xl font-bold mb-4">First Level Club Payouts</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left border border-gray-300 table-fixed">
           <thead className="bg-gray-100">
