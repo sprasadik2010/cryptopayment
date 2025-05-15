@@ -16,6 +16,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 import socket
 
+from datetime import datetime, date
+
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
@@ -31,7 +33,7 @@ def get_local_ip():
 local_ip = get_local_ip()
 # Initialize FastAPI app
 app = FastAPI()
-
+print(f"http://{local_ip}:5173")
 # CORS settings
 app.add_middleware(
     CORSMiddleware,
@@ -69,17 +71,17 @@ class MemberCreate(BaseModel):
 
 class MemberResponse(BaseModel):
     id: int
-    name: str
+    name: Optional[str] = None
     email: EmailStr
-    username: str
-    parentid: int
-    position: int
+    username: Optional[str] = None
+    parentid: Optional[int] = None
+    position: Optional[int] = None  # if it maps to 'side' (which is a string), adjust type
     is_verified: bool
     is_active: bool
-    createdby: int
+    createdby: Optional[int] = None
     createdon: datetime
-    parentname:Optional[str]
-    role:str
+    parentname: Optional[str] = None
+    role: str
 
 class MemberLogin(BaseModel):
     username: str
@@ -107,12 +109,20 @@ class ProfitClubRequest(BaseModel):
 class WithdrawalResponse(BaseModel):
    id:int
    userid:int
+   username:Optional[str]
+   name:Optional[str]
    date:datetime
    amount:float 
+   is_approved:bool
+   approvaldate:Optional[datetime] = None
+   class Config:
+        from_attributes = True
 
 class WithdrawalRequest(BaseModel):
    userid:int
    amount:float 
+class WithdrawalApproveRequest(BaseModel):
+    is_approved: bool
 
 
 # Dependency for database session
@@ -759,7 +769,9 @@ def addwithdrawal(wd: WithdrawalRequest, db: Session = Depends(get_db)):
         new_withdrawal = Withdrawals(
             userid=wd.userid,
             date=currentdate,
-            amount=wd.amount
+            amount=wd.amount,
+            is_approved=False,
+            approvaldate=None
         )
 
         db.add(new_withdrawal)
@@ -771,32 +783,140 @@ def addwithdrawal(wd: WithdrawalRequest, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Adding Withdrawal failed: {str(e)}")
 
+@app.post("/approvewithdrawal/{withdrawal_id}")
+def approve_withdrawal(withdrawal_id: int, db: Session = Depends(get_db)):
+    withdrawal = db.query(Withdrawals).filter(Withdrawals.id == withdrawal_id).first()
+
+    if not withdrawal:
+        raise HTTPException(status_code=404, detail="Withdrawal not found")
+    
+    if withdrawal.is_approved:
+        return {"message": "Withdrawal already approved"}
+
+    withdrawal.is_approved = True
+    withdrawal.approvaldate = datetime.today()
+
+    db.commit()
+    db.refresh(withdrawal)
+
+    return {"message": "Withdrawal approved", "id": withdrawal.id}
 
 @app.get("/getallwithdrawals", response_model=List[WithdrawalResponse])
 def get_all_withdrawals(db: Session = Depends(get_db)):
-    AllWithdrawals = db.query(Withdrawals).all()
+    # AllWithdrawals = db.query(Withdrawals).all()
+    # return [
+    #     WithdrawalResponse(
+    #         id=wd.id,
+    #         userid=wd.userid,
+    #         date=wd.date,
+    #         amount=wd.amount,
+    #         is_approved=wd.is_approved,
+    #         approvaldate=wd.approvaldate
+    #     )
+    #     for wd in AllWithdrawals
+    # ]
+    results = (
+        db.query(
+            Withdrawals.id,
+            Withdrawals.userid,
+            Withdrawals.date,
+            Withdrawals.amount,
+            Withdrawals.is_approved,
+            Withdrawals.approvaldate,
+            Member.username,
+            Member.membername.label("name")
+        )
+        .join(Member, Withdrawals.userid == Member.id)
+        # .filter(Withdrawals.userid == userid)
+        .all()
+    )
+
     return [
         WithdrawalResponse(
-            id=wd.id,
-            userid=wd.userid,
-            date=wd.date,
-            amount=wd.amount
+            id=r.id,
+            userid=r.userid,
+            date=r.date,
+            amount=float(r.amount),  # since Numeric may need casting
+            is_approved=r.is_approved,
+            approvaldate=r.approvaldate,
+            username=r.username,
+            name=r.name
         )
-        for wd in AllWithdrawals
+        for r in results
     ]
+
+# @app.get("/getwithdrawals/{userid}", response_model=List[WithdrawalResponse])
+# def get_withdrawals(userid: int, db: Session = Depends(get_db)):
+#     user_withdrawals = db.query(Withdrawals).filter(Withdrawals.userid == userid).all()
+#     return [
+#         WithdrawalResponse(
+#             id=wd.id,
+#             userid=wd.userid,
+#             date=wd.date,
+#             amount=wd.amount,
+#             is_approved=wd.is_approved,
+#             approvaldate=wd.approvaldate
+#         )
+#         for wd in user_withdrawals
+#     ]
 
 @app.get("/getwithdrawals/{userid}", response_model=List[WithdrawalResponse])
 def get_withdrawals(userid: int, db: Session = Depends(get_db)):
-    user_withdrawals = db.query(Withdrawals).filter(Withdrawals.userid == userid).all()
+    results = (
+        db.query(
+            Withdrawals.id,
+            Withdrawals.userid,
+            Withdrawals.date,
+            Withdrawals.amount,
+            Withdrawals.is_approved,
+            Withdrawals.approvaldate,
+            Member.username,
+            Member.membername.label("name")
+        )
+        .join(Member, Withdrawals.userid == Member.id)
+        .filter(Withdrawals.userid == userid)
+        .all()
+    )
+
     return [
         WithdrawalResponse(
-            id=wd.id,
-            userid=wd.userid,
-            date=wd.date,
-            amount=wd.amount
+            id=r.id,
+            userid=r.userid,
+            date=r.date,
+            amount=float(r.amount),  # since Numeric may need casting
+            is_approved=r.is_approved,
+            approvaldate=r.approvaldate,
+            username=r.username,
+            name=r.name
         )
-        for wd in user_withdrawals
+        for r in results
     ]
+
+
+@app.patch("/approve-reject-withdrawal/{id}")
+def approverejectwithdrawal(
+    id: int,
+    request: WithdrawalApproveRequest,
+    db: Session = Depends(get_db)
+):
+    existing_withdrawal = db.query(Withdrawals).filter(Withdrawals.id == id).first()
+    
+    if not existing_withdrawal:
+        raise HTTPException(status_code=400, detail="Withdrawal not found.")
+
+    try:
+        existing_withdrawal.is_approved = request.is_approved
+        if request.is_approved:
+            existing_withdrawal.approvaldate = date.today()
+        else:
+            existing_withdrawal.approvaldate = None
+        db.commit()
+        db.refresh(existing_withdrawal)
+
+        return {"message": "Withdrawal updated"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Update failed: {str(e)}")
 
 @app.post("/logout/")
 def logout():

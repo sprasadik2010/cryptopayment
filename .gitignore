@@ -19,7 +19,6 @@ server/venvcrypto/
 server/.mypy_cache/
 server/.pytest_cache/
 server/.ruff_cache/
-server/db
 
 # Python environment variables and logs
 server/.env
