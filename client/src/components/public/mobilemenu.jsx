@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function MobileMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const linkClasses = ({ isActive }) =>
+    isActive
+      ? "bg-blue-600 text-white px-4 py-2 rounded"
+      : "hover:text-blue-500 text-gray-700 px-4 py-2";
 
   return (
     <>
@@ -38,18 +43,34 @@ export default function MobileMenu() {
 
         {/* Menu Items */}
         <ul className="flex flex-col space-y-4 mt-16 px-6">
-          <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
-          <li><Link to="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
-          <li><Link to="/services" onClick={() => setMenuOpen(false)}>Services</Link></li>
-          <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></li>
           <li>
-            <Link
+            <NavLink to="/" onClick={() => setMenuOpen(false)} className={linkClasses}>
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/about" onClick={() => setMenuOpen(false)} className={linkClasses}>
+              About
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/services" onClick={() => setMenuOpen(false)} className={linkClasses}>
+              Services
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/contact" onClick={() => setMenuOpen(false)} className={linkClasses}>
+              Contact
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/login"
               onClick={() => setMenuOpen(false)}
               className="block bg-blue-600 text-white text-center py-2 rounded-lg"
             >
               Login
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </div>

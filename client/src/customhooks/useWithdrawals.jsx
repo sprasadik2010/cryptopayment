@@ -16,6 +16,7 @@ export default function useWithdrawals(currentUserId) {
         const totalAmount = data.reduce((sum, item) => sum + item.amount, 0);
         setTotalWithdrawals(totalAmount);
       } catch (err) {
+        console.log("The Error is: ", err);
         console.error("Error fetching withdrawal data:", err);
       }
     };

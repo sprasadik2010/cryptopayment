@@ -1,5 +1,3 @@
-
-
 import Banner from "../../components/public/banner";
 import NavBar from "../../components/public/navbar";
 

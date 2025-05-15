@@ -68,7 +68,7 @@ export default function HundredClubShare({onUpdate}) {
           <thead className="bg-gray-100">
             <tr>
               <th className="py-2 px-1 border-b">Release Date</th>
-              <th className="py-2 px-1 border-b">Your Share ($)</th>
+              <th className="py-2 px-1 border-b text-right">Your Share ($)</th>
             </tr>
           </thead>
           <tbody>
@@ -82,7 +82,7 @@ export default function HundredClubShare({onUpdate}) {
               profitData.map((row, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="py-2 px-1 border-b">{row.date}</td>
-                  <td className="py-2 px-1 border-b text-green-700 font-semibold">${row.userShare}</td>
+                  <td className="py-2 px-1 border-b text-green-700 font-semibold text-right">${row.userShare}</td>
                 </tr>
               ))
             )}

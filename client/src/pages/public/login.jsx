@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../../components/public/navbar";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -37,6 +38,8 @@ export default function Login() {
   };
 
   return (
+    <>
+          <NavBar />
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-blue-600">Login</h2>
@@ -78,5 +81,6 @@ export default function Login() {
         </form>
       </div>
     </div>
+    </>
   );
 }

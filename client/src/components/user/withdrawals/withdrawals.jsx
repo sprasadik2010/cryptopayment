@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 export default function MyWithdrawals({onTotalWithdrawalsChange}) {
 
   const currentUser = JSON.parse(localStorage.getItem("currentuser"));
@@ -33,7 +34,8 @@ export default function MyWithdrawals({onTotalWithdrawalsChange}) {
             <tr>
             <th className="py-2 px-1 border-b break-words">#</th>
             <th className="py-2 px-1 border-b break-words">Date</th>
-              <th className="py-2 px-1 border-b break-words">Amount</th>
+            <th className="py-2 px-1 border-b break-words text-right">Amount</th>
+            <th className="py-2 px-1 border-b break-words text-right">Approval Date</th>
             </tr>
           </thead>
           <tbody>
@@ -48,7 +50,12 @@ export default function MyWithdrawals({onTotalWithdrawalsChange}) {
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="py-2 px-1 border-b break-words">{index + 1}</td>
                   <td className="py-2 px-1 border-b break-words">{row.date}</td>
-                  <td className="py-2 px-1 border-b break-words">${row.amount.toFixed(3)}</td>
+                  <td className="py-2 px-1 border-b break-words text-right">${row.amount.toFixed(3)}</td>
+                  <td className="py-2 px-1 border-b break-words text-right">
+                    {row.is_approved ? 
+                      <span className="text-green-500">{row.approvaldate}</span> : 
+                      <span className="text-red-500">NOT APPROVED</span>}
+                  </td>
                 </tr>
               ))
             )}

@@ -4,7 +4,8 @@ export default function LogoutButton() {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem("access_token"); // 🛑 Remove the token
+        localStorage.removeItem("access_token"); 
+        localStorage.removeItem("currentuser"); 
         navigate("/"); // 🔄 Redirect to home page
     };
 

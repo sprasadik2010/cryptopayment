@@ -8,9 +8,19 @@ export default function SuperAdminMenu() {
 
   return (
     <ul className="hidden md:flex space-x-6">
+    <li>
+      <NavLink to="/auth/adm/dashboard" className={linkClasses}>
+        Home
+      </NavLink>
+    </li>
+    <li>
+      <NavLink to="/auth/adm/members" className={linkClasses}>
+        Manage Members
+      </NavLink>
+    </li>
       <li>
-        <NavLink to="/auth/adm/dashboard" className={linkClasses}>
-          Home
+        <NavLink to="/auth/adm/withdrawals" className={linkClasses}>
+          Manage Withdrawals
         </NavLink>
       </li>
     </ul>

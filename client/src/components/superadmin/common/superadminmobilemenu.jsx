@@ -1,16 +1,15 @@
 import { LogOut } from "lucide-react";
 import { useState } from "react";
 import { NavLink, Link, useNavigate  } from "react-router-dom";
-import LogoutButton from "./logoutbtton";
 
 
-export default function UserMobileMenu() {
+export default function SuperAdminMobileMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem("access_token");        
+        localStorage.removeItem("access_token");       
         localStorage.removeItem("currentuser"); 
         navigate("/"); // 🔄 Redirect to home page
     };
@@ -55,23 +54,18 @@ export default function UserMobileMenu() {
         {/* Menu Items */}
         <ul className="flex flex-col space-y-4 mt-16 px-6">
           <li>
-            <NavLink to="/auth/dashboard" className={linkClasses} onClick={() => setMenuOpen(false)}>
+            <NavLink to="/auth/adm/dashboard" className={linkClasses} onClick={() => setMenuOpen(false)}>
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/auth/downlines" className={linkClasses} onClick={() => setMenuOpen(false)}>
-              Downlines
+            <NavLink to="/auth/adm/members" className={linkClasses} onClick={() => setMenuOpen(false)}>
+              Manage Members
             </NavLink>
           </li>
           <li>
-            <NavLink to="/auth/payouts" className={linkClasses} onClick={() => setMenuOpen(false)}>
-              Payouts
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/auth/withdrawals" className={linkClasses} onClick={() => setMenuOpen(false)}>
-              Withdrawals
+            <NavLink to="/auth/adm/withdrawals" className={linkClasses} onClick={() => setMenuOpen(false)}>
+              Manage Withdrawals
             </NavLink>
           </li>
           <li>

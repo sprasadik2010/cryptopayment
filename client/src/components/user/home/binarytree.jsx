@@ -224,7 +224,7 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
         </div>
 
         <div className="p-4 bg-blue-200 rounded h-full">
-          <div style={{ width: "100%", height: "100vh", position: "relative", border: "solid 2px black", float: "right" }}>
+          <div style={{ width: "100%", height: "50vh", position: "relative", border: "solid 2px black", float: "right" }}>
             {treeData ? (
               <Tree
                 data={treeData}
@@ -241,7 +241,7 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
                 nodeClassName={(nodeData) =>
                               nodeData.data.isPlaceholder ? "node__placeholder" : ""
                               }
-                draggable = {false}
+                draggable = {true}
                 
               />
             ) : (

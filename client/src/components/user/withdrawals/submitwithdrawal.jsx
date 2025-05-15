@@ -1,10 +1,16 @@
 import { useState } from "react";
 
+import useTotalPayout from "../../../customhooks/useTotalPayout"
+import useWithdrawals from "../../../customhooks/useWithdrawals";
+
 export default function SubmitWithdrawal() {
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const currentUser = JSON.parse(localStorage.getItem("currentuser"));
+  const totalPayout = useTotalPayout();
+  const { withdrawals, totalWithdrawals } = useWithdrawals(currentUser?.id);
+  const maxWithdrawal = totalPayout - totalWithdrawals;
   const handleSubmit = (e) => {
     e.preventDefault();
     const numericAmount = parseFloat(amount);
@@ -14,8 +20,8 @@ export default function SubmitWithdrawal() {
       return;
     }
 
-    if (numericAmount > 1000.0) {
-      setError("Maximum withdrawal amount is $1000.000.");
+    if (numericAmount > maxWithdrawal) {
+      setError(`Maximum withdrawal amount is $${maxWithdrawal.toFixed(3)}.`);
       return;
     }
 
@@ -65,7 +71,7 @@ export default function SubmitWithdrawal() {
         <form onSubmit={handleSubmit} className="space-y-4 max-w-sm">
           <div>
             <label htmlFor="amount" className="block text-sm font-medium mb-1">
-              Amount ($)
+              Amount ($) Available: ${maxWithdrawal.toFixed(3)}
             </label>
             <input
               type="number"

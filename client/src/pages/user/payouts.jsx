@@ -41,29 +41,28 @@ export default function PayOuts(){
   const { withdrawals, totalWithdrawals } = useWithdrawals(currentUser?.id);
     return(
         <>
-        <header className="sticky top-0 left-0 w-full bg-white shadow z-50 p-4">
-          <UserNavBar/>
-        </header>
-        <main>
-          <BinaryPayouts onUpdate={(val) => onUpdate(val, "binary")} />
-          <ReferralPayouts onUpdate={(val) => onUpdate(val, "referral")} />    
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-            <div className="bg-gray-200 p-4 rounsded"><ProfitClubShare onUpdate={(val) => onUpdate(val, "profitclub")} /></div>
-            <div className="bg-gray-200 p-4 rounded"><FirstLevelClubShare onUpdate={(val) => onUpdate(val, "firstlevelclub")} /></div>
-            <div className="bg-gray-200 p-4 rounded"><SecondLevelClubShare onUpdate={(val) => onUpdate(val, "secondlevelclub")} /></div>
-            <div className="bg-gray-200 p-4 rounded"><ThirdLevelClubShare onUpdate={(val) => onUpdate(val, "thirdlevelclub")} /></div>
-            <div className="bg-gray-200 p-4 rounded"><FourthLevelClubShare onUpdate={(val) => onUpdate(val, "fourthlevelclub")} /></div>
-            <div className="bg-gray-200 p-4 rounded"><FifthLevelClubShare onUpdate={(val) => onUpdate(val, "fifthlevelclub")} /></div>
-            <div className="bg-gray-200 p-4 rounded"><TwentyFiveClubShare onUpdate={(val) => onUpdate(val, "twentyfiveclub")} /></div>
-            <div className="bg-gray-200 p-4 rounded"><HundredClubShare onUpdate={(val) => onUpdate(val, "hundredclub")} /></div>
-          </div>
-        </main>
-        <footer className="grid grid-cols-3 gap-4 sticky bottom-0 left-0 w-full bg-blue-400 shadow-inner z-40 p-4">
-        <div className="text-center">Total: <br/> {totalPayout}</div>
-        <div className="text-center">Withdrawal: <br/> {totalWithdrawals}</div>
-        <div className="text-center">Reamaing: <br/> {totalPayout - totalWithdrawals}</div>
-        </footer>
-
+          <header className="sticky top-0 left-0 w-full bg-white shadow z-50 p-4">
+            <UserNavBar/>
+          </header>
+          <main>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-0 sm:p-4">
+              <div className="bg-gray-200 p-0 sm:p-4 rounded"><BinaryPayouts onUpdate={(val) => onUpdate(val, "binary")} /></div>
+              <div className="bg-gray-200 p-4 rounded"><ReferralPayouts onUpdate={(val) => onUpdate(val, "referral")} /></div>
+              <div className="bg-gray-200 p-4 rounded"><ProfitClubShare onUpdate={(val) => onUpdate(val, "profitclub")} /></div>
+              <div className="bg-gray-200 p-4 rounded"><FirstLevelClubShare onUpdate={(val) => onUpdate(val, "firstlevelclub")} /></div>
+              <div className="bg-gray-200 p-4 rounded"><SecondLevelClubShare onUpdate={(val) => onUpdate(val, "secondlevelclub")} /></div>
+              <div className="bg-gray-200 p-4 rounded"><ThirdLevelClubShare onUpdate={(val) => onUpdate(val, "thirdlevelclub")} /></div>
+              <div className="bg-gray-200 p-4 rounded"><FourthLevelClubShare onUpdate={(val) => onUpdate(val, "fourthlevelclub")} /></div>
+              <div className="bg-gray-200 p-4 rounded"><FifthLevelClubShare onUpdate={(val) => onUpdate(val, "fifthlevelclub")} /></div>
+              <div className="bg-gray-200 p-4 rounded"><TwentyFiveClubShare onUpdate={(val) => onUpdate(val, "twentyfiveclub")} /></div>
+              <div className="bg-gray-200 p-4 rounded"><HundredClubShare onUpdate={(val) => onUpdate(val, "hundredclub")} /></div>
+            </div>
+          </main>
+          <footer className="grid grid-cols-3 gap-4 sticky bottom-0 left-0 w-full bg-blue-400 shadow-inner z-40 p-4">
+            <div className="text-center">Total: <br/> ${parseFloat(totalPayout).toFixed(3)}</div>
+            <div className="text-center">Withdrawal: <br/> ${parseFloat(totalWithdrawals).toFixed(3)}</div>
+            <div className="text-center">Reamaing: <br/> ${parseFloat(totalPayout - totalWithdrawals).toFixed(3)}</div>
+          </footer>
         </>
     );
 }

@@ -10,8 +10,8 @@ export default function Verify() {
 
   useEffect(() => {
     const verifyEmail = async () => {
-      try {
-        const response = await fetch(`http://127.0.0.1:8000/verify/${encodedData}`, {
+      try {        
+        const response = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/verify/${encodedData}`, {
           method: "GET",
         });
 
