@@ -1,0 +1,15 @@
+INSERT INTO public.member(
+    membername, email, username, password, parentid, side, is_verified, verification_token, is_active, createdby, createdon, parentname, createdbyname, role, activationhstory)
+VALUES 
+(
+    'Super Admin', 'superadmin@example.com', 'superadmin',
+    '$2b$12$MNOESCyJU2Jm0AY2kzJA0eXuha3qS5BNPoL5Dc1HbfTClCJn/e8Za',
+    0, '0', true, NULL, true,
+    NULL, CURRENT_TIMESTAMP, NULL, 'superadmin', 'superadmin', NULL
+),
+(
+    'Admin', 'admin@example.com', 'admin',
+    '$2b$12$MNOESCyJU2Jm0AY2kzJA0eXuha3qS5BNPoL5Dc1HbfTClCJn/e8Za',
+    1, '0', true, NULL, true,
+    1, CURRENT_TIMESTAMP, 'Super Admin', 'Super Admin', 'user', NULL
+);
