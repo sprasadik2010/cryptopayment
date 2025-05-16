@@ -17,32 +17,12 @@ from typing import List, Optional
 import socket
 
 from datetime import datetime, date
-
-def get_local_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        # connect to a dummy IP to get your local IP
-        s.connect(('10.255.255.255', 1))
-        IP = s.getsockname()[0]
-    except Exception:
-        IP = '127.0.0.1'
-    finally:
-        s.close()
-    return IP
-
-local_ip = get_local_ip()
-# Initialize FastAPI app
 app = FastAPI()
-print(f"http://{local_ip}:5173")
+
 # CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        f"https://cryptopayment-client.onrender.com",
-        f"http://localhost:5173",
-        f"http://127.0.0.1:5173",
-        f"http://{local_ip}:5173",  # <-- this one is for mobile access
-    ],
+    allow_origin_regex=r"https://.*\.onrender\.com",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
