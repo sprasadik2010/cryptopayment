@@ -38,6 +38,7 @@ print(f"http://{local_ip}:5173")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        f"https://cryptopayment-client.onrender.com",
         f"http://localhost:5173",
         f"http://127.0.0.1:5173",
         f"http://{local_ip}:5173",  # <-- this one is for mobile access
@@ -922,7 +923,7 @@ def approverejectwithdrawal(
 def logout():
     return {"message": "Logout successful. Clear the token on the client side."}
 
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8000))  # Render sets $PORT
-    uvicorn.run(app, host="0.0.0.0", port=port)
+# if __name__ == "__main__":
+#     import uvicorn
+#     port = int(os.environ.get("PORT", 8000))  # Render sets $PORT
+#     uvicorn.run(app, host="0.0.0.0", port=port)
