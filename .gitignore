@@ -2,10 +2,10 @@
 client/node_modules/
 client/dist/
 client/.vite/
-
+Related files/
 # Environment files
-*.env
-*.env.*
+# *.env
+# *.env.*
 
 # OS-specific files
 .DS_Store
