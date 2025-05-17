@@ -21,7 +21,7 @@ server/.pytest_cache/
 server/.ruff_cache/
 
 # Python environment variables and logs
-server/.env
+# server/.env
 server/*.log
 
 # VSCode settings (optional)
