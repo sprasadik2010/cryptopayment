@@ -4,6 +4,8 @@ import SocialMediaLinks from "../../public/socialmedialinks";
 import UserMenu from "./usermenu";
 import LogoutButton from "./logoutbtton";
 import UserMobileMenu from "./usermobilemenu";
+import logo from "../../assets/logo.png";
+
 export default function UserNavBar(){
     return(
       <nav className="bg-white shadow-md top-0 left-0 w-full z-50">

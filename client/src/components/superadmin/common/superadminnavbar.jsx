@@ -4,6 +4,8 @@ import MobileMenu from "../../public/mobilemenu";
 import LogoutButton from "../../user/common/logoutbtton";
 import SuperAdminMenu from "./superadminmenu";
 import SuperAdminMobileMenu from "./superadminmobilemenu";
+import logo from "../../assets/logo.png";
+
 export default function SuperAdminNavBar(){
     return(
       <nav className="bg-white shadow-md top-0 left-0 w-full z-50">
