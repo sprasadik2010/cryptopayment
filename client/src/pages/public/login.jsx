@@ -7,11 +7,12 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setloading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-
+    setloading(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/login`, {
         method: "POST",
@@ -24,6 +25,7 @@ export default function Login() {
       const data = await response.json();
 
       if (!response.ok) {
+        setloading(false);
         throw new Error(data.detail || "Login failed");
       }
 
@@ -33,6 +35,7 @@ export default function Login() {
       {navigate("/auth/adm/dashboard");}
       else{navigate("/auth/dashboard");}
     } catch (error) {
+        setloading(false);
       setError(error.message);
     }
   };
@@ -81,6 +84,9 @@ export default function Login() {
         </form>
       </div>
     </div>
+     {loading && <div className="fixed inset-0 backdrop-blur-3xl flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-25 w-25 border-t-4 border-yellow color-yellow"></div>
+        </div>}
     </>
   );
 }
