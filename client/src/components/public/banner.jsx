@@ -3,7 +3,7 @@ export default function Banner(){
     return(              
       <div className="h-screen flex items-center justify-center text-center bg-blue-500 text-white">
       <div>
-        <h2 className="text-4xl font-bold">Welcome to <span className="text-yellow-500">XFX</span></h2>
+        <h2 className="text-4xl font-bold">Welcome to <span className="text-yellow-500">RollFx</span></h2>
         <p className="mt-2 text-lg">Your tagline or description goes here.</p>
         <button className="mt-6 bg-white text-blue-500 px-6 py-3 rounded-lg font-bold hover:bg-gray-100">
           Get Started
