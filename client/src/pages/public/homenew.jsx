@@ -12,10 +12,10 @@ export default function HomeNew() {
       {/* Tagline Section */}
       <section className="text-center px-4 py-12">
         <h1 className="text-4xl md:text-5xl font-extrabold text-blue-700">
-          Welcome to <span className="text-yellow-500">XFX</span>
+          Welcome to <span className="text-yellow-500">RollFx</span>
         </h1>
         <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-          Crypto Meets Community Growth — Earn securely in USDT while expanding your trusted network with XFX.
+          Crypto Meets Community Growth — Earn securely in USDT while expanding your trusted network with RollFx.
         </p>
       </section>
 
@@ -42,7 +42,7 @@ export default function HomeNew() {
 
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} XFX. All rights reserved.
+        © {new Date().getFullYear()} RollFx. All rights reserved.
       </footer>
     </div>
   );
