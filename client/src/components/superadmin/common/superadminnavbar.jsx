@@ -4,7 +4,7 @@ import MobileMenu from "../../public/mobilemenu";
 import LogoutButton from "../../user/common/logoutbtton";
 import SuperAdminMenu from "./superadminmenu";
 import SuperAdminMobileMenu from "./superadminmobilemenu";
-import logo from "../../assets/logo.png";
+import logo from "../../../assets/logo.png";
 
 export default function SuperAdminNavBar(){
     return(

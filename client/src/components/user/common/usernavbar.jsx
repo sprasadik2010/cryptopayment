@@ -4,7 +4,7 @@ import SocialMediaLinks from "../../public/socialmedialinks";
 import UserMenu from "./usermenu";
 import LogoutButton from "./logoutbtton";
 import UserMobileMenu from "./usermobilemenu";
-import logo from "../../assets/logo.png";
+import logo from "../../../assets/logo.png";
 
 export default function UserNavBar(){
     return(
