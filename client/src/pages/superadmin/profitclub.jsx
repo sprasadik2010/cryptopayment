@@ -24,13 +24,13 @@ export default function ProfitClub() {
   return (
     <>
       <SuperAdminNavBar />
-      <div className="flex">
-        <SuperAdminMenu />
+      {/* <div className="flex"> */}
+        {/* <SuperAdminMenu /> */}
         <div className="flex-1 p-4">
           <CreateProfitClub refreshList={fetchProfitClubShares} />
           <ProfitClubShareList AllProfitClubShares={AllProfitClubShares} />
         </div>
-      </div>
+      {/* </div> */}
     </>
   );
 }
