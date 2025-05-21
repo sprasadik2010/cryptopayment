@@ -106,7 +106,7 @@ export default function SignupPage() {
   return (
     <>
     <NavBar/>
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center pt-2 bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-blue-600">Sign Up</h2>
 
@@ -283,7 +283,7 @@ export default function SignupPage() {
     {Success && (
                 <div
                     id="popup-modal"
-                    className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-screen bg-black bg-opacity-50"
+                    className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full pt-2 bg-black bg-opacity-50"
                 >
                     <div className="relative p-4 w-full max-w-md">
                         <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">

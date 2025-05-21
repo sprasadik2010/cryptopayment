@@ -7,7 +7,7 @@ const Homepage = () => {
     <>
             <NavBar/>
             {/* <Banner/> */}
-    <div className="bg-gray-900 text-white min-h-screen font-sans">
+    <div className="bg-gray-900 text-white pt-2 font-sans">
       {/* Hero Section */}
       <section className="text-center py-20 bg-gradient-to-br from-indigo-800 to-purple-700">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">

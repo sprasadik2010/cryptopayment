@@ -41,7 +41,7 @@ export default function MyWithdrawals({onTotalWithdrawalsChange}) {
           <tbody>
             {myWithdrawals.length === 0 ? (
               <tr>
-                <td colSpan="3" className="text-center p-4 text-gray-500">
+                <td colSpan="4" className="text-center p-4 text-gray-500">
                   No withdrawals found.
                 </td>
               </tr>

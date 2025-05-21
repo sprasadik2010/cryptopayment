@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 export default function HomeNew() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-gray-100 text-gray-800">
+    <div className="h-screen bg-gradient-to-br from-white via-blue-50 to-gray-100 text-gray-800">
       <NavBar />
       <BannerSlider />
 

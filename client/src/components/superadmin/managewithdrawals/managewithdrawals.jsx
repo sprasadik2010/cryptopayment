@@ -85,7 +85,7 @@ const renderwithdrawals = (children, title) => (
           <tbody>
             {children.length === 0 ? (
               <tr>
-                <td colSpan="3" className="text-center p-4 text-gray-500">
+                <td colSpan="7" className="text-center p-4 text-gray-500">
                   No withdrawals found.
                 </td>
               </tr>

@@ -62,6 +62,7 @@ class MemberResponse(BaseModel):
     createdby: Optional[int] = None
     createdon: datetime
     parentname: Optional[str] = None
+    createdbyname: Optional[str] = None
     role: str
 
 class MemberLogin(BaseModel):

@@ -64,6 +64,11 @@ export default function SuperAdminMobileMenu() {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/auth/adm/profitclub" className={linkClasses} onClick={() => setMenuOpen(false)}>
+              Manage Profit Club
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/auth/adm/withdrawals" className={linkClasses} onClick={() => setMenuOpen(false)}>
               Manage Withdrawals
             </NavLink>
