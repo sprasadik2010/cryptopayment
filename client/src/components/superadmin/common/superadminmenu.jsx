@@ -18,6 +18,11 @@ export default function SuperAdminMenu() {
         Manage Members
       </NavLink>
     </li>
+    <li>
+      <NavLink to="/auth/adm/profitclub" className={linkClasses}>
+        Manage Profit Club
+      </NavLink>
+    </li>
       <li>
         <NavLink to="/auth/adm/withdrawals" className={linkClasses}>
           Manage Withdrawals

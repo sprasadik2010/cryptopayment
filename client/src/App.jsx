@@ -13,6 +13,7 @@ import About from "./pages/public/about";
 import Services from "./pages/public/services";
 import Contact from "./pages/public/contact";
 import HomeNew from "./pages/public/homenew";
+import ProfitClub from "./pages/superadmin/profitclub";
 
 // 🔐 Private Route Component
 function PrivateRoute({ children }) {
@@ -75,6 +76,14 @@ function App() {
         element={
           <PrivateRoute>
             <Members/>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/auth/adm/profitclub"
+        element={
+          <PrivateRoute>
+            <ProfitClub/>
           </PrivateRoute>
         }
       />
