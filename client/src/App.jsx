@@ -14,6 +14,7 @@ import Services from "./pages/public/services";
 import Contact from "./pages/public/contact";
 import HomeNew from "./pages/public/homenew";
 import ProfitClub from "./pages/superadmin/profitclub";
+import PayNow from "./pages/user/paynow";
 
 // 🔐 Private Route Component
 function PrivateRoute({ children }) {
@@ -60,6 +61,14 @@ function App() {
         element={
           <PrivateRoute>
             <Withdrawals/>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/auth/PayNow"
+        element={
+          <PrivateRoute>
+            <PayNow/>
           </PrivateRoute>
         }
       />

@@ -28,6 +28,11 @@ export default function UserMenu() {
           Withdrawals
         </NavLink>
       </li>
+      <li>
+        <NavLink to="/auth/PayNow" className={linkClasses}>
+          Pay Now
+        </NavLink>
+      </li>
     </ul>
   );
 }
