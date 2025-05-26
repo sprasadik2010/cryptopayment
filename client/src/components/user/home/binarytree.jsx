@@ -5,27 +5,6 @@ import SignUpLinks from "./signuplink";
 
 // Component
 export default function BinaryTree({ Currentusername, CurrentUserId }) {
-  const styles = `
-    .node__leaf > circle {
-      fill: white;
-      r: 20;
-      stroke: black;
-      stroke-width: 2px;
-    }
-    .node__branch > circle {
-      fill: gold;
-      stroke: black;
-      stroke-width: 2px;
-    }
-    .node__placeholder > circle {
-      fill: none !important;
-      stroke: grey !important;
-      stroke-width: 2px;
-    }
-    .node__placeholder text {
-      display: none;
-    }
-  `;
 
   const [treeData, setTreeData] = useState(null);
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
@@ -41,23 +20,46 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
   const [translate, setTranslate] = useState({ x: 300, y: 200 });
   const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
-  const renderRectNode = ({ nodeDatum }) => (
+  const renderRectNode = ({ nodeDatum }) => {
+  const PADDING_X = 20;
+
+  // Temporary canvas to measure text width
+  const getTextWidth = (text, font = '16px sans-serif') => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = font;
+    const metrics = context.measureText(text);
+    return metrics.width;
+  };
+
+  const textWidth = getTextWidth(nodeDatum.name);
+  const rectWidth = textWidth + PADDING_X * 2;
+
+  return (
     <g onClick={() => handleNodeClick({ data: nodeDatum })}>
       <rect
-        width="100"
+        width={rectWidth}
         height="40"
-        x="-50"
+        x={-rectWidth / 2}
         y="-20"
         fill="lightblue"
-        stroke="steelblue"
+        stroke={nodeDatum.is_active === false ? "#9CA3AF" : "steelblue"}
         strokeWidth="1.5"
         rx={5}
       />
-      <text fill="black" x="0" y="5" textAnchor="middle">
+      <text
+        x="0"
+        y="5"
+        stroke={nodeDatum.is_active === false ? "#9CA3AF" : "steelblue"}
+        strokeWidth="1"
+        textAnchor="middle"
+        fontSize="16px"
+      >
         {nodeDatum.name}
       </text>
     </g>
   );
+};
 
 
   // Function to build hierarchical tree structure
@@ -179,7 +181,6 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
 
   return (
     <>
-      <style>{styles}</style>
       <div className="grid grid-rows-[auto,1fr] gap-1">
         <div className="p-4 bg-blue-100 rounded">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
@@ -224,7 +225,7 @@ export default function BinaryTree({ Currentusername, CurrentUserId }) {
         </div>
 
         <div className="p-4 bg-blue-200 rounded h-full">
-          <div style={{ width: "100%", height: "50vh", position: "relative", border: "solid 2px black", float: "right" }}>
+          <div style={{ width: "100%", height: "50vh", position: "relative", border: "solid 2px black", float: "right" }}>            
             {treeData ? (
               <Tree
                 data={treeData}

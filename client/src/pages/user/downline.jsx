@@ -51,16 +51,24 @@ export default function DownLines() {
                         </tr>
                     </thead>
                     <tbody>
-                        {children.map((c, i) => (
-                            <tr key={i} className="hover:bg-gray-50">
-                                <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-green-500'}`}>{i + 1}</td>
-                                <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-green-500'} break-words`}>{c.name}</td>
-                                <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-green-500'}`}>{formatDate(c.createdon)}</td>
-                                <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-green-500'}`}>{c.parentname}</td>
-                                <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-green-500'}`}>{c.createdbyname}</td>
-                                <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-green-500'}`}>{c.is_active ? 'Yes' : 'No'}</td>
+                        {children.length === 0 ? (
+                            <tr>
+                                <td colSpan="6" className="text-center p-4 text-gray-500">
+                                No children found.
+                                </td>
                             </tr>
-                        ))}
+                            ) : (
+                            children.map((c, i) => (
+                                        <tr key={i} className="hover:bg-gray-50">
+                                            <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-blue-500'}`}>{i + 1}</td>
+                                            <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-blue-500'} break-words`}>{c.name}</td>
+                                            <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-blue-500'}`}>{formatDate(c.createdon)}</td>
+                                            <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-blue-500'}`}>{c.parentname}</td>
+                                            <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-blue-500'}`}>{c.createdbyname}</td>
+                                            <td className={`py-2 px-1 border-b ${!c.is_active ? 'text-gray-400' : 'font-bold text-blue-500'}`}>{c.is_active ? 'Yes' : 'No'}</td>
+                                        </tr>
+                                    )))
+                    }
                     </tbody>
                 </table>
             </div>
