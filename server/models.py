@@ -18,7 +18,12 @@ class Member(Base):
     createdon = Column(DateTime(timezone=True), server_default=func.now())    
     parentname = Column(String, nullable=True)    
     createdbyname = Column(String, nullable=True)   
-    role = Column(String, nullable=False, server_default='user')
+    role = Column(String, nullable=False, server_default='user')  
+    activationhistory = Column(String, nullable=True)    
+    paid = Column(Boolean, default=False)
+    paidamount = Column(Numeric(19, 4), nullable=False)
+    paymentdate = Column(DateTime(timezone=True), server_default=func.now())   
+    paymentproof = Column(String, nullable=True)   
 
 class ProfitClub(Base):
     __tablename__ = 'profitclub'

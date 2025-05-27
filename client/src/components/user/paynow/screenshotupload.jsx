@@ -3,7 +3,8 @@ import { useState } from 'react';
 export default function ScreenshotUpload() {
   const [screenshot, setScreenshot] = useState(null);
   const [fileName, setFileName] = useState("No file chosen");
-  const [selectedFile, setSelectedFile] = useState(null); // Save the selected file
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
@@ -19,13 +20,14 @@ export default function ScreenshotUpload() {
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) return;
+    if (!selectedFile || uploading) return;
+    setUploading(true);
 
     const formData = new FormData();
     formData.append("file", selectedFile); // Match FastAPI parameter
 
     try {
-      const response = await fetch("http://localhost:8000/upload", {
+      const response = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/upload-payment-proof`, {
         method: "POST",
         body: formData,
       });
@@ -37,6 +39,7 @@ export default function ScreenshotUpload() {
     } catch (err) {
       console.error("Upload error:", err);
     }
+    setUploading(false);
   };
 
   return (
@@ -66,10 +69,11 @@ export default function ScreenshotUpload() {
 
           {/* Upload Button */}
           <button
+            disabled={uploading}
             onClick={handleUpload}
-            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+            className={`mt-2 px-4 py-2 bg-blue-500 text-white rounded ${uploading ? 'opacity-50' : ''}`}
           >
-            Upload
+            {uploading ? 'Uploading...' : 'Upload'}
           </button>
         </>
       )}

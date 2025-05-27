@@ -1,7 +1,7 @@
 from collections import deque
 from sqlalchemy import or_
 import os
-from fastapi import FastAPI, Depends, HTTPException, Header
+from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from sqlalchemy import cast, String
 from database import SessionLocal, engine
@@ -15,6 +15,8 @@ from jose import JWTError, jwt
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 import socket
+from uuid import uuid4
+import shutil
 
 from datetime import datetime, date
 app = FastAPI()
@@ -56,7 +58,7 @@ class MemberResponse(BaseModel):
     email: EmailStr
     username: Optional[str] = None
     parentid: Optional[int] = None
-    position: Optional[int] = None  # if it maps to 'side' (which is a string), adjust type
+    position: Optional[int] = None
     is_verified: bool
     is_active: bool
     createdby: Optional[int] = None
@@ -64,6 +66,11 @@ class MemberResponse(BaseModel):
     parentname: Optional[str] = None
     createdbyname: Optional[str] = None
     role: str
+    activationhistory: Optional[str] = None
+    paid: bool
+    paidamount: Optional[float] = None
+    paymentdate: datetime
+    paymentproof: Optional[str] = None
 
 class MemberLogin(BaseModel):
     username: str
@@ -105,6 +112,11 @@ class WithdrawalRequest(BaseModel):
    amount:float 
 class WithdrawalApproveRequest(BaseModel):
     is_approved: bool
+
+# class UserPaymentRequest(BaseModel):
+#     paid: bool
+#     paidamount = float
+#     paymentdate = datetime
 
 
 # Dependency for database session
@@ -275,7 +287,12 @@ def get_all_members(db: Session = Depends(get_db)):
             createdon=m.createdon,
             parentname=m.parentname,
             createdbyname=m.createdbyname,
-            role=m.role
+            role=m.role,
+            activationhistory=m.activationhistory,
+            paid=m.paid,
+            paidamount=m.paidamount,
+            paymentdate=m.paymentdate,
+            paymentproof=m.paymentproof
         )
         for m in members
     ]
@@ -899,6 +916,48 @@ def approverejectwithdrawal(
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Update failed: {str(e)}")
+
+@app.patch("/upload-payment-proof/{username}")
+async def upload_payment_proof(username: str, file: UploadFile = File(...), db: Session = Depends(get_db)
+):
+    # Get member excluding superadmin
+    member = db.query(Member).filter(Member.username == username, Member.role != 'superadmin').first()
+
+    if not member:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    try:
+        # Save file
+        guid = str(uuid4())
+        folder_path = os.path.join("uploaded_screenshots", guid)
+        os.makedirs(folder_path, exist_ok=True)
+
+        file_path = os.path.join(folder_path, file.filename)
+
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        # Update fields
+        member.paid = True
+        member.paidamount = 500
+        member.paymentdate = datetime.fromisoformat(datetime.now)
+        member.paymentproof = file_path
+
+        db.commit()
+        db.refresh(member)
+
+        return {
+            "message": "Payment info updated",
+            "username": member.username,
+            "paid": member.paid,
+            "paidamount": str(member.paidamount),
+            "paymentdate": member.paymentdate.isoformat(),
+            "paymentproof": file_path
+        }
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error updating payment info: {str(e)}")
 
 @app.post("/logout/")
 def logout():
