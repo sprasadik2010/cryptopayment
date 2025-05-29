@@ -19,12 +19,15 @@ def upload_file_to_drive(local_file_path: str, filename: str, folder_id: str):
     service = get_drive_service()
     file_metadata = {
         "name": filename,
-        "parents": [folder_id]  # Uploads into CryptoPaymentUploads folder
+        "parents": [folder_id]
     }
     media = MediaFileUpload(local_file_path, resumable=True)
     uploaded_file = service.files().create(
         body=file_metadata,
         media_body=media,
-        fields="id, webViewLink"
+        fields="id"  # Only need the file ID
     ).execute()
-    return uploaded_file["webViewLink"]
+
+    file_id = uploaded_file["id"]
+    direct_link = f"https://drive.google.com/uc?export=view&id={file_id}"
+    return direct_link
