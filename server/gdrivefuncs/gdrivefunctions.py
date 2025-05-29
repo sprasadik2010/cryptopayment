@@ -1,16 +1,17 @@
 import os
+import json
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
 # Define the scope
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
-SERVICE_ACCOUNT_FILE = 'service_account.json'  # keep this in your backend folder
 
 def get_drive_service():
-    creds = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE,
-        scopes=SCOPES
+    # Load service account info from environment variable
+    service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT"])
+    creds = service_account.Credentials.from_service_account_info(
+        service_account_info, scopes=SCOPES
     )
     return build('drive', 'v3', credentials=creds)
 
