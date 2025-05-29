@@ -17,6 +17,7 @@ from typing import List, Optional
 import socket
 from uuid import uuid4
 import shutil
+from gdrivefuncs.gdrivefunctions import upload_file_to_drive
 
 from datetime import datetime, date
 app = FastAPI()
@@ -24,7 +25,8 @@ app = FastAPI()
 # CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"(https://.*\.onrender\.com|http://localhost:\d+)",
+    allow_origins=["http://localhost:5173"],
+    # allow_origin_regex=r"(https://.*\.onrender\.com|http://localhost:\d+)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -69,7 +71,7 @@ class MemberResponse(BaseModel):
     activationhistory: Optional[str] = None
     paid: bool
     paidamount: Optional[float] = None
-    paymentdate: datetime
+    paymentdate: Optional[datetime] = None
     paymentproof: Optional[str] = None
 
 class MemberLogin(BaseModel):
@@ -267,7 +269,12 @@ def getamember(username: str = Depends(get_current_user), db: Session = Depends(
         createdon=member.createdon,
         parentname=member.parentname,
         createdbyname=member.createdbyname,
-        role=member.role
+        role=member.role,
+        activationhistory=member.activationhistory,
+        paid=member.paid,
+        paidamount=member.paidamount,
+        paymentdate=member.paymentdate,
+        paymentproof=member.paymentproof
     )
 
 @app.get("/getallmembers", response_model=List[MemberResponse])
@@ -315,7 +322,12 @@ def get_all_members(db: Session = Depends(get_db)):
             createdon=m.createdon,
             parentname=m.parentname,
             createdbyname=m.createdbyname,
-            role=m.role
+            role=m.role,
+            activationhistory=m.activationhistory,
+            paid=m.paid,
+            paidamount=m.paidamount,
+            paymentdate=m.paymentdate,
+            paymentproof=m.paymentproof
         )
         for m in members
     ]
@@ -351,7 +363,12 @@ def get_children(username: str, db: Session = Depends(get_db)):
             createdon=member.createdon,
             parentname=member.parentname,
             createdbyname=member.createdbyname,
-            role=member.role
+            role=member.role,
+            activationhistory=member.activationhistory,
+            paid=member.paid,
+            paidamount=member.paidamount,
+            paymentdate=member.paymentdate,
+            paymentproof=member.paymentproof
         ) for member in [parent] + children  # Adding parent to the beginning
     ]
 
@@ -382,7 +399,12 @@ def get_leftmost_vacant_left(userid: int, db: Session = Depends(get_db)):
                 createdon=current.createdon,
                 parentname=current.parentname,
                 createdbyname=current.createdbyname,
-                role=current.role
+                role=current.role,
+            activationhistory=current.activationhistory,
+            paid=current.paid,
+            paidamount=current.paidamount,
+            paymentdate=current.paymentdate,
+            paymentproof=current.paymentproof
             )
         current = left_child  # Move to the next left child
 
@@ -412,7 +434,12 @@ def get_rightmost_vacant(userid: int, db: Session = Depends(get_db)):
                 createdon=current.createdon,
                 parentname=current.parentname,
                 createdbyname=current.createdbyname,
-                role=current.role
+                role=current.role,
+            activationhistory=current.activationhistory,
+            paid=current.paid,
+            paidamount=current.paidamount,
+            paymentdate=current.paymentdate,
+            paymentproof=current.paymentproof
             )
         current = right_child  # Move to the next right child
 
@@ -445,7 +472,12 @@ def get_left_descendants(user_id: int, db: Session = Depends(get_db)):
             createdon=current.createdon,
             parentname=current.parentname,
             createdbyname=current.createdbyname,
-            role=current.role
+            role=current.role,
+            activationhistory=current.activationhistory,
+            paid=current.paid,
+            paidamount=current.paidamount,
+            paymentdate=current.paymentdate,
+            paymentproof=current.paymentproof
         ))
 
         # Include both left & right children of this left-subtree member
@@ -483,7 +515,12 @@ def get_right_descendants(user_id: int, db: Session = Depends(get_db)):
             createdon=current.createdon,
             parentname=current.parentname,
             createdbyname=current.createdbyname,
-            role=current.role
+            role=current.role,
+            activationhistory=current.activationhistory,
+            paid=current.paid,
+            paidamount=current.paidamount,
+            paymentdate=current.paymentdate,
+            paymentproof=current.paymentproof
         ))
 
         # Include both left & right children of this right-subtree member
@@ -567,7 +604,12 @@ def first_level_members(db: Session = Depends(get_db)):
                 createdon=m.createdon,
                 parentname=m.parentname,
                 createdbyname=m.createdbyname,
-                role=m.role
+                role=m.role,
+            activationhistory=m.activationhistory,
+            paid=m.paid,
+            paidamount=m.paidamount,
+            paymentdate=m.paymentdate,
+            paymentproof=m.paymentproof
             )
             for m in members
         ]
@@ -605,7 +647,12 @@ def get_second_level_members(db: Session = Depends(get_db)):
             createdon=m.createdon,
             parentname=m.parentname,
             createdbyname=m.createdbyname,
-            role=m.role
+            role=m.role,
+            activationhistory=m.activationhistory,
+            paid=m.paid,
+            paidamount=m.paidamount,
+            paymentdate=m.paymentdate,
+            paymentproof=m.paymentproof
         )
         for m in second_level_members
     ]
@@ -648,7 +695,12 @@ def get_third_level_members(db: Session = Depends(get_db)):
             createdon=m.createdon,
             parentname=m.parentname,
             createdbyname=m.createdbyname,
-            role=m.role
+            role=m.role,
+            activationhistory=m.activationhistory,
+            paid=m.paid,
+            paidamount=m.paidamount,
+            paymentdate=m.paymentdate,
+            paymentproof=m.paymentproof
         )
         for m in third_level_members
     ]
@@ -698,7 +750,12 @@ def get_fourth_level_members(db: Session = Depends(get_db)):
             createdon=m.createdon,
             parentname=m.parentname,
             createdbyname=m.createdbyname,
-            role=m.role
+            role=m.role,
+            activationhistory=m.activationhistory,
+            paid=m.paid,
+            paidamount=m.paidamount,
+            paymentdate=m.paymentdate,
+            paymentproof=m.paymentproof
         )
         for m in fourth_level_members
     ]
@@ -754,7 +811,12 @@ def get_fifth_level_members(db: Session = Depends(get_db)):
             createdon=m.createdon,
             parentname=m.parentname,
             createdbyname=m.createdbyname,
-            role=m.role
+            role=m.role,
+            activationhistory=m.activationhistory,
+            paid=m.paid,
+            paidamount=m.paidamount,
+            paymentdate=m.paymentdate,
+            paymentproof=m.paymentproof
         )
         for m in fifth_level_members
     ]
@@ -918,33 +980,33 @@ def approverejectwithdrawal(
         raise HTTPException(status_code=500, detail=f"Update failed: {str(e)}")
 
 @app.patch("/upload-payment-proof/{username}")
-async def upload_payment_proof(username: str, file: UploadFile = File(...), db: Session = Depends(get_db)
-):
-    # Get member excluding superadmin
+async def upload_payment_proof(username: str, file: UploadFile = File(...), db: Session = Depends(get_db)):
     member = db.query(Member).filter(Member.username == username, Member.role != 'superadmin').first()
 
     if not member:
         raise HTTPException(status_code=404, detail="User not found")
 
     try:
-        # Save file
+        # Save temporarily
         guid = str(uuid4())
-        folder_path = os.path.join("uploaded_screenshots", guid)
-        os.makedirs(folder_path, exist_ok=True)
-
-        file_path = os.path.join(folder_path, file.filename)
-
-        with open(file_path, "wb") as buffer:
+        temp_path = f"temp_{guid}_{file.filename}"
+        with open(temp_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        # Update fields
+        folder_id = "1wOb2ls3vkwfggp5xpWqiz7dol5W-HBYk"  
+        gdrive_link = upload_file_to_drive(temp_path, file.filename, folder_id)
+
+        # Update database
         member.paid = True
         member.paidamount = 500
-        member.paymentdate = datetime.fromisoformat(datetime.now)
-        member.paymentproof = file_path
+        member.paymentdate = datetime.now()
+        member.paymentproof = gdrive_link
 
         db.commit()
         db.refresh(member)
+
+        # Clean up
+        os.remove(temp_path)
 
         return {
             "message": "Payment info updated",
@@ -952,12 +1014,13 @@ async def upload_payment_proof(username: str, file: UploadFile = File(...), db: 
             "paid": member.paid,
             "paidamount": str(member.paidamount),
             "paymentdate": member.paymentdate.isoformat(),
-            "paymentproof": file_path
+            "paymentproof": gdrive_link
         }
 
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating payment info: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error uploading to Drive: {str(e)}")
+
 
 @app.post("/logout/")
 def logout():

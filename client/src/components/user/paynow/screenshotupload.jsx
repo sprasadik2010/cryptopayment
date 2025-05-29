@@ -5,6 +5,7 @@ export default function ScreenshotUpload() {
   const [fileName, setFileName] = useState("No file chosen");
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const currentUser = JSON.parse(localStorage.getItem("currentuser"));
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
@@ -19,7 +20,8 @@ export default function ScreenshotUpload() {
     }
   };
 
-  const handleUpload = async () => {
+  const handleUpload = async () => {    
+      if (!currentUser) return;
     if (!selectedFile || uploading) return;
     setUploading(true);
 
@@ -27,8 +29,8 @@ export default function ScreenshotUpload() {
     formData.append("file", selectedFile); // Match FastAPI parameter
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/upload-payment-proof`, {
-        method: "POST",
+      const response = await fetch(`${import.meta.env.VITE_CRYPTO_PAYMENT_API_BASE_URL}/upload-payment-proof/${currentUser.username}`, {
+        method: "PATCH",
         body: formData,
       });
 
