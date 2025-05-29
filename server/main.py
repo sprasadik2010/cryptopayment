@@ -18,6 +18,7 @@ import socket
 from uuid import uuid4
 import shutil
 from gdrivefuncs.gdrivefunctions import upload_file_to_drive
+import traceback
 
 from datetime import datetime, date
 app = FastAPI()
@@ -1019,6 +1020,7 @@ async def upload_payment_proof(username: str, file: UploadFile = File(...), db: 
 
     except Exception as e:
         db.rollback()
+        traceback.print_exc()  # <- This prints the full stack trace to Render logs
         raise HTTPException(status_code=500, detail=f"Error uploading to Drive: {str(e)}")
 
 
