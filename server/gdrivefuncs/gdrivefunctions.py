@@ -18,13 +18,13 @@ def get_drive_service():
 
 def upload_file_to_drive(local_file_path: str, filename: str, folder_id: str):
     service = get_drive_service()
-    
+
     file_metadata = {
         "name": filename,
         "parents": [folder_id]
     }
     media = MediaFileUpload(local_file_path, resumable=True)
-    
+
     uploaded_file = service.files().create(
         body=file_metadata,
         media_body=media,
@@ -43,9 +43,9 @@ def upload_file_to_drive(local_file_path: str, filename: str, folder_id: str):
         body=permission
     ).execute()
 
-    # Public access link
-    direct_link = f"https://drive.google.com/uc?export=view&id={file_id}"
-    return direct_link
+    # Return Google Drive thumbnail link
+    thumbnail_url = f"https://drive.google.com/thumbnail?id={file_id}"
+    return thumbnail_url
 
 def minimize_image(file_bytes, max_width=800, max_height=800, quality=75):
     # Load image from bytes

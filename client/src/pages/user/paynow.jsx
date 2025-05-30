@@ -32,7 +32,7 @@ export default function PayNow() {
         </div>
       )}
 
-      {currentUser.paid && <img src={currentUser.paymentproof} alt="Payment Proof" />}
+      {currentUser.paid && <img src={currentUser.paymentproof.replace("export=view&", "")} alt="Payment Proof" />}
     </div>
   );
 }
