@@ -43,9 +43,8 @@ def upload_file_to_drive(local_file_path: str, filename: str, folder_id: str):
         body=permission
     ).execute()
 
-    # Return Google Drive thumbnail link
-    thumbnail_url = f"https://drive.google.com/thumbnail?id={file_id}"
-    return thumbnail_url
+    # Return Google Drive file id
+    return file_id
 
 def minimize_image(file_bytes, max_width=800, max_height=800, quality=75):
     # Load image from bytes
