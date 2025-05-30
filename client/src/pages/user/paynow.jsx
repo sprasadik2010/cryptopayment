@@ -32,7 +32,13 @@ export default function PayNow() {
         </div>
       )}
 
-      {currentUser.paid && <img src={currentUser.paymentproof.replace("export=view&", "")} alt="Payment Proof" />}
+      {currentUser.paid && (
+        <div className="container mx-auto px-4 py-6">
+          <div className="bg-white p-6 mb-5 rounded-lg shadow-md">
+            <img src={currentUser.paymentproof.replace("export=view&", "")} alt="Payment Proof" />
+          </div>
+        </div>
+        )}
     </div>
   );
 }
