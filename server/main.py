@@ -165,7 +165,8 @@ def register(member: MemberCreate, db: Session = Depends(get_db)):
             verification_token=verification_token,
             createdby=member.createdby,
             parentname=parentname,
-            createdbyname=createdbyname
+            createdbyname=createdbyname,
+            phone=member.phone
         )
 
         db.add(new_member)

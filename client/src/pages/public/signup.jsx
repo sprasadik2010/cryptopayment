@@ -81,7 +81,8 @@ export default function SignupPage() {
       side: formData.position === "Right" ? 1 : 0,
       createdby: parseInt(formData.parentid) || 0,
       parentname:"",
-      createdbyname:""
+      createdbyname:"",
+      phone:formData.phone
     };
 
     try {
