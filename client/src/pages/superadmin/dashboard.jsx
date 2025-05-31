@@ -129,8 +129,9 @@ export default function DashBoard(){
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <div className="bg-white rounded shadow-lg p-4 max-w-lg w-full relative">
             <button
+            type="button"
               onClick={handleClose}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              className="absolute top-2 right-2 bg-white rounded text-red-500 hover:text-red-700"
             >
               ✖
             </button>

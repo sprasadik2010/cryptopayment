@@ -54,6 +54,7 @@ class MemberCreate(BaseModel):
     createdby: int
     parentname:str
     createdbyname:str
+    phone:str
 
 class MemberResponse(BaseModel):
     id: int
@@ -74,6 +75,7 @@ class MemberResponse(BaseModel):
     paidamount: Optional[float] = None
     paymentdate: Optional[datetime] = None
     paymentproof: Optional[str] = None
+    phone: Optional[str] = None
 
 class MemberLogin(BaseModel):
     username: str
@@ -275,7 +277,8 @@ def getamember(username: str = Depends(get_current_user), db: Session = Depends(
         paid=member.paid,
         paidamount=member.paidamount,
         paymentdate=member.paymentdate,
-        paymentproof=member.paymentproof
+        paymentproof=member.paymentproof,
+        phone=member.phone
     )
 
 @app.get("/getallmembers", response_model=List[MemberResponse])
@@ -300,7 +303,8 @@ def get_all_members(db: Session = Depends(get_db)):
             paid=m.paid,
             paidamount=m.paidamount,
             paymentdate=m.paymentdate,
-            paymentproof=m.paymentproof
+            paymentproof=m.paymentproof,
+            phone=m.phone
         )
         for m in members
     ]
@@ -328,7 +332,8 @@ def get_all_members(db: Session = Depends(get_db)):
             paid=m.paid,
             paidamount=m.paidamount,
             paymentdate=m.paymentdate,
-            paymentproof=m.paymentproof
+            paymentproof=m.paymentproof,
+            phone=m.phone
         )
         for m in members
     ]
@@ -369,7 +374,8 @@ def get_children(username: str, db: Session = Depends(get_db)):
             paid=member.paid,
             paidamount=member.paidamount,
             paymentdate=member.paymentdate,
-            paymentproof=member.paymentproof
+            paymentproof=member.paymentproof,
+            phone=member.phone
         ) for member in [parent] + children  # Adding parent to the beginning
     ]
 
@@ -405,7 +411,8 @@ def get_leftmost_vacant_left(userid: int, db: Session = Depends(get_db)):
             paid=current.paid,
             paidamount=current.paidamount,
             paymentdate=current.paymentdate,
-            paymentproof=current.paymentproof
+            paymentproof=current.paymentproof,
+            phone=current.phone
             )
         current = left_child  # Move to the next left child
 
@@ -440,7 +447,8 @@ def get_rightmost_vacant(userid: int, db: Session = Depends(get_db)):
             paid=current.paid,
             paidamount=current.paidamount,
             paymentdate=current.paymentdate,
-            paymentproof=current.paymentproof
+            paymentproof=current.paymentproof,
+            phone=current.phone
             )
         current = right_child  # Move to the next right child
 
@@ -478,7 +486,8 @@ def get_left_descendants(user_id: int, db: Session = Depends(get_db)):
             paid=current.paid,
             paidamount=current.paidamount,
             paymentdate=current.paymentdate,
-            paymentproof=current.paymentproof
+            paymentproof=current.paymentproof,
+            phone=current.phone
         ))
 
         # Include both left & right children of this left-subtree member
@@ -521,7 +530,8 @@ def get_right_descendants(user_id: int, db: Session = Depends(get_db)):
             paid=current.paid,
             paidamount=current.paidamount,
             paymentdate=current.paymentdate,
-            paymentproof=current.paymentproof
+            paymentproof=current.paymentproof,
+            phone=current.phone
         ))
 
         # Include both left & right children of this right-subtree member
@@ -610,7 +620,8 @@ def first_level_members(db: Session = Depends(get_db)):
             paid=m.paid,
             paidamount=m.paidamount,
             paymentdate=m.paymentdate,
-            paymentproof=m.paymentproof
+            paymentproof=m.paymentproof,
+            phone=m.phone
             )
             for m in members
         ]
@@ -653,7 +664,8 @@ def get_second_level_members(db: Session = Depends(get_db)):
             paid=m.paid,
             paidamount=m.paidamount,
             paymentdate=m.paymentdate,
-            paymentproof=m.paymentproof
+            paymentproof=m.paymentproof,
+            phone=m.phone
         )
         for m in second_level_members
     ]
@@ -701,7 +713,8 @@ def get_third_level_members(db: Session = Depends(get_db)):
             paid=m.paid,
             paidamount=m.paidamount,
             paymentdate=m.paymentdate,
-            paymentproof=m.paymentproof
+            paymentproof=m.paymentproof,
+            phone=m.phone
         )
         for m in third_level_members
     ]
@@ -756,7 +769,8 @@ def get_fourth_level_members(db: Session = Depends(get_db)):
             paid=m.paid,
             paidamount=m.paidamount,
             paymentdate=m.paymentdate,
-            paymentproof=m.paymentproof
+            paymentproof=m.paymentproof,
+            phone=m.phone
         )
         for m in fourth_level_members
     ]
@@ -817,7 +831,8 @@ def get_fifth_level_members(db: Session = Depends(get_db)):
             paid=m.paid,
             paidamount=m.paidamount,
             paymentdate=m.paymentdate,
-            paymentproof=m.paymentproof
+            paymentproof=m.paymentproof,
+            phone=m.phone
         )
         for m in fifth_level_members
     ]
