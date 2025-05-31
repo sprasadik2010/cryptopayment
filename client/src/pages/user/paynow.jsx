@@ -35,7 +35,13 @@ export default function PayNow() {
       {currentUser.paid && (
         <div className="container mx-auto px-4 py-6">
           <div className="bg-white p-6 mb-5 rounded-lg shadow-md">
-            <img src={currentUser.paymentproof.replace("export=view&", "")} alt="Payment Proof" />
+            <h2 className="text-2xl font-semibold mb-4">Your payment screenshot</h2>
+            <iframe
+              src={`https://drive.google.com/file/d/${currentUser.paymentproof}/preview`}
+              width="100%"
+              height="480"
+              allow="autoplay"
+            />
           </div>
         </div>
         )}
