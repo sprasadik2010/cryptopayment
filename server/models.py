@@ -23,7 +23,7 @@ class Member(Base):
     paid = Column(Boolean, default=False)
     paidamount = Column(Numeric(19, 4), nullable=False)
     paymentdate = Column(DateTime(timezone=True), server_default=func.now())   
-    paymentproof = Column(String, nullable=True),
+    paymentproof = Column(String, nullable=True)
     phone = Column(String, nullable=True)
 
 class ProfitClub(Base):
